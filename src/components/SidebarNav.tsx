@@ -6,6 +6,7 @@ const navItems: Array<{ id: MobileWarRoomPanel; label: string }> = [
   { id: "plan", label: "สร้างแผน" },
   { id: "journal", label: "บันทึก" },
   { id: "imageRecords", label: "รายการจากรูป" },
+  { id: "expenses", label: "ค่าใช้จ่าย" },
   { id: "tools", label: "เครื่องมือ" }
 ];
 

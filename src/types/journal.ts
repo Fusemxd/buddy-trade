@@ -15,6 +15,10 @@ export type JournalEntry = {
   emotion: string;
   reasonForEntry: string;
   notes: string;
+  strategy?: string;
+  mistakeTags?: string;
+  tradeDuration?: string;
+  followedPlan?: "yes" | "no";
 };
 
 export type JournalSummaryStats = {

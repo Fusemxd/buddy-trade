@@ -1,16 +1,19 @@
+import AlertManager from "./AlertManager";
+
 export default function ToolsPanel() {
   return (
     <section className="grid gap-4">
       <div className="rounded-3xl border border-slate-700/70 bg-slate-950/65 p-5">
         <p className="text-xs font-black uppercase tracking-[0.2em] text-cyan-200">Tools / Settings</p>
         <h2 className="mt-1 text-2xl font-black text-white">เครื่องมือ</h2>
-        <p className="mt-2 text-sm text-slate-400">พื้นที่สำหรับจัดการข้อมูลและการตั้งค่าในอนาคต ยังไม่มีการเชื่อมต่อ API หรือบัญชี Exchange</p>
+        <p className="mt-2 text-sm text-slate-400">พื้นที่สำหรับ alert, ข้อมูล local และคู่มือ ไม่มีการเชื่อมต่อบัญชี Exchange หรือ API keys</p>
       </div>
+      <AlertManager />
       <div className="grid gap-3 md:grid-cols-2">
         <ToolCard title="Data Management" helper="TODO: เพิ่ม export/import local data ในอนาคต" />
-        <ToolCard title="AI API Settings" helper="TODO: เพิ่มเฉพาะ server route ภายหลัง ตอนนี้ปิดไว้และไม่ต้องใช้ env" />
+        <ToolCard title="AI API Settings" helper="ยังไม่เปิดใช้ OpenAI API และยังไม่ต้องใช้ environment variables" />
         <ToolCard title="User Guide" helper="อ่าน README สำหรับวิธีใช้งานและข้อจำกัดด้านความเสี่ยง" />
-        <ToolCard title="Privacy" helper="Journal, chat, screenshots และ expenses เก็บใน localStorage ของเครื่องนี้" />
+        <ToolCard title="Privacy" helper="Journal, chat, screenshots, alerts และ expenses เก็บใน localStorage ของเครื่องนี้" />
       </div>
     </section>
   );

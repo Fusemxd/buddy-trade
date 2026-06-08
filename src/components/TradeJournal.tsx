@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { loadJournal, saveJournal } from "@/lib/journal";
 import type { JournalEntry, TradeDirection, TradeResult } from "@/types/journal";
+import JournalDashboard from "./JournalDashboard";
 import JournalSummary from "./JournalSummary";
 
 type JournalForm = Omit<JournalEntry, "id" | "createdAt">;
@@ -20,7 +21,11 @@ const emptyForm = (): JournalForm => ({
   profitLossThb: "",
   emotion: "",
   reasonForEntry: "",
-  notes: ""
+  notes: "",
+  strategy: "",
+  mistakeTags: "",
+  tradeDuration: "",
+  followedPlan: "yes"
 });
 
 const directions: TradeDirection[] = ["Spot Buy", "Long", "Short"];
@@ -65,6 +70,9 @@ export default function TradeJournal() {
       <div className="mt-4">
         <JournalSummary entries={entries} />
       </div>
+      <div className="mt-4">
+        <JournalDashboard entries={entries} />
+      </div>
 
       <form className="mt-5 grid gap-3 lg:grid-cols-3" onSubmit={submit}>
         <InputField label="Date" type="date" value={form.date} onChange={(value) => setForm((current) => ({ ...current, date: value }))} />
@@ -76,6 +84,10 @@ export default function TradeJournal() {
         <SelectField label="Result" value={form.result} options={results} onChange={(value) => setForm((current) => ({ ...current, result: value as TradeResult }))} />
         <InputField label="Profit or Loss in THB" type="number" value={form.profitLossThb} onChange={(value) => setForm((current) => ({ ...current, profitLossThb: value }))} />
         <InputField label="Emotion" value={form.emotion} onChange={(value) => setForm((current) => ({ ...current, emotion: value }))} />
+        <InputField label="Strategy" value={form.strategy ?? ""} onChange={(value) => setForm((current) => ({ ...current, strategy: value }))} />
+        <InputField label="Mistake tags" value={form.mistakeTags ?? ""} onChange={(value) => setForm((current) => ({ ...current, mistakeTags: value }))} />
+        <InputField label="Trade duration" value={form.tradeDuration ?? ""} onChange={(value) => setForm((current) => ({ ...current, tradeDuration: value }))} />
+        <SelectField label="Followed plan" value={form.followedPlan ?? "yes"} options={["yes", "no"]} onChange={(value) => setForm((current) => ({ ...current, followedPlan: value as "yes" | "no" }))} />
         <TextAreaField label="Reason for entry" value={form.reasonForEntry} onChange={(value) => setForm((current) => ({ ...current, reasonForEntry: value }))} />
         <TextAreaField label="Notes" value={form.notes} onChange={(value) => setForm((current) => ({ ...current, notes: value }))} />
         <button className="min-h-14 rounded-xl bg-purple-300 px-4 py-3 text-base font-black text-slate-950 lg:col-span-3">Save journal entry</button>

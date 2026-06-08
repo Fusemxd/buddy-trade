@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { evaluateAlertRule } from "@/lib/alertRules";
+import { loadAlertEvents, loadAlertRules, saveAlertEvents } from "@/lib/alertStorage";
 import { analyzeKlines } from "@/lib/indicators";
 import { fetchMarketData } from "@/lib/marketDataProviders";
 import { buildWatchlistSetup } from "@/lib/setupScanner";
@@ -9,6 +11,7 @@ import type { Kline, MarketSignal } from "@/types/market";
 import type { WatchlistSetup } from "@/types/setup";
 import type { WatchlistItem } from "@/types/watchlist";
 import DataSourceBadge from "./DataSourceBadge";
+import MultiTimeframePanel from "./MultiTimeframePanel";
 import WatchlistCard from "./WatchlistCard";
 import WatchlistManager from "./WatchlistManager";
 
@@ -34,6 +37,7 @@ export default function WatchlistScanner({ onBuildPlan }: { onBuildPlan?: (symbo
         const markets = await Promise.all(scanSymbols.map((symbol) => loadMarketSignal(symbol, timeframe, forceRefresh)));
         const validMarkets = markets.filter((market): market is MarketSignal => Boolean(market));
         setItems(validMarkets.map(buildWatchlistSetup));
+        evaluateScannerAlerts(validMarkets);
         if (validMarkets.length !== scanSymbols.length) {
           setError("ดึงข้อมูลจาก Binance ไม่ได้ชั่วคราว สามารถกรอกราคาเองเพื่อคำนวณ Risk ได้");
         }
@@ -93,6 +97,7 @@ export default function WatchlistScanner({ onBuildPlan }: { onBuildPlan?: (symbo
         <div className="min-w-0">
           {error ? <p className="mb-4 rounded-2xl border border-red-300/35 bg-red-300/10 p-3 text-sm font-bold text-red-100">{error}</p> : null}
           {failedSymbol ? <ManualFallback symbol={failedSymbol} onBuildPlan={onBuildPlan} /> : null}
+          {items[0] ? <div className="mb-4"><MultiTimeframePanel symbol={items[0].symbol} /></div> : null}
           <div className="grid gap-3 xl:grid-cols-2">
             {loading && !items.length
               ? watchlist.map((item) => <div className="min-h-72 animate-pulse rounded-3xl border border-slate-700 bg-slate-900/70" key={item.id} />)
@@ -111,6 +116,24 @@ export default function WatchlistScanner({ onBuildPlan }: { onBuildPlan?: (symbo
       </div>
     </section>
   );
+}
+
+function evaluateScannerAlerts(markets: MarketSignal[]) {
+  const rules = loadAlertRules();
+  if (!rules.length) return;
+  const existingEvents = loadAlertEvents();
+  const nextEvents = rules.flatMap((rule) => {
+    const market = markets.find((item) => item.symbol === rule.symbol);
+    const event = evaluateAlertRule(rule, market);
+    return event ? [event] : [];
+  });
+  if (!nextEvents.length) return;
+  saveAlertEvents([...nextEvents, ...existingEvents].slice(0, 100));
+  if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+    for (const event of nextEvents.slice(0, 2)) {
+      new Notification("Trade Buddy Alert", { body: event.message });
+    }
+  }
 }
 
 async function loadMarketSignal(symbol: string, timeframe: string, forceRefresh: boolean): Promise<MarketSignal | null> {
