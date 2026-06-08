@@ -83,7 +83,7 @@ export default function WatchlistCard({
 
       <p className="mt-3 rounded-2xl border border-white/10 bg-black/20 p-3 text-sm font-bold text-slate-100">{statusDescription[setup.marketStatus]}</p>
       <p className="mt-3 text-sm font-bold text-slate-200">Next step: {setup.nextStep}</p>
-      <p className="mt-2 text-xs font-semibold text-slate-400">{setup.cached ? "ข้อมูล cache ล่าสุดเมื่อ " : "อัปเดตเมื่อ "}{formatTime(setup.updatedAt)} · auto refresh ทุก 60 วิ</p>
+      <p className="mt-2 text-xs font-semibold text-slate-400">{setup.cached ? "ข้อมูล cache ล่าสุดเมื่อ " : "อัปเดตเมื่อ "}{formatTime(setup.updatedAt)} เวลาไทย · auto refresh ทุก 60 วิ</p>
 
       <div className="mt-4 grid grid-cols-2 gap-2">
         <button className="min-h-12 rounded-2xl border border-cyan-300/30 bg-cyan-300/10 px-4 text-sm font-black text-cyan-100" onClick={() => onBuildPlan?.(setup.symbol)} type="button">
@@ -176,6 +176,12 @@ function formatPercent(value: number | undefined) {
 
 function formatTime(value: string | undefined) {
   if (!value) return "-";
-  const match = value.match(/T(\d{2}):(\d{2})/);
-  return match ? `${match[1]}:${match[2]}` : "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+  return new Intl.DateTimeFormat("th-TH", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Bangkok"
+  }).format(date);
 }
