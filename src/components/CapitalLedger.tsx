@@ -32,22 +32,20 @@ export default function CapitalLedger({ compact = false }: { compact?: boolean }
 
   return (
     <section className="min-w-0 rounded-3xl border border-emerald-300/25 bg-emerald-300/10 p-4">
-      <div className="grid min-w-0 gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
+      <div className="min-w-0">
         <div className="min-w-0">
           <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-100">Capital Ledger</p>
-          <h3 className="mt-1 break-words text-2xl font-black text-white">{formatUsdWithThb(summary.balanceUsd)}</h3>
+          <h3 className="mt-1 text-2xl font-black text-white">{formatUsdWithThb(summary.balanceUsd)}</h3>
           <p className="mt-1 text-sm font-semibold leading-relaxed text-emerald-50/80">บันทึกฝาก/ถอนเพื่อคำนวณทุนปัจจุบัน</p>
         </div>
-        {!compact ? (
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <Mini label="ฝากรวม" value={formatUsdWithThb(summary.depositsUsd)} />
-            <Mini label="ถอนรวม" value={formatUsdWithThb(summary.withdrawalsUsd)} />
-          </div>
-        ) : null}
       </div>
 
       {!compact ? (
         <>
+          <div className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
+            <SummaryLine label="ฝากรวม" value={formatUsdWithThb(summary.depositsUsd)} />
+            <SummaryLine label="ถอนรวม" value={formatUsdWithThb(summary.withdrawalsUsd)} />
+          </div>
           <form className="mt-4 grid min-w-0 gap-2 sm:grid-cols-2" onSubmit={submit}>
             <select className="min-h-12 min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-3 font-bold text-white" value={type} onChange={(event) => setType(event.target.value as CapitalTransactionType)}>
               <option value="deposit">ฝากทุน</option>
@@ -74,11 +72,11 @@ export default function CapitalLedger({ compact = false }: { compact?: boolean }
   );
 }
 
-function Mini({ label, value }: { label: string; value: string }) {
+function SummaryLine({ label, value }: { label: string; value: string }) {
   return (
-    <div className="min-w-0 rounded-2xl border border-white/10 bg-slate-950/50 p-3">
-      <p className="text-xs font-bold text-emerald-100/70">{label}</p>
-      <p className="break-words text-sm font-black text-white">{value}</p>
+    <div className="flex min-w-0 items-center justify-between gap-3 rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-2">
+      <p className="shrink-0 text-xs font-bold text-emerald-100/70">{label}</p>
+      <p className="truncate text-sm font-black text-white">{value}</p>
     </div>
   );
 }
