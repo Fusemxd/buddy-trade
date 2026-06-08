@@ -12,7 +12,7 @@ import ChatQuickPrompts from "./ChatQuickPrompts";
 import ChatRiskCard from "./ChatRiskCard";
 
 const SUBTITLE_TEXT = "\u0E0A\u0E48\u0E27\u0E22\u0E40\u0E0A\u0E47\u0E01\u0E41\u0E1C\u0E19\u0E40\u0E17\u0E23\u0E14\u0E41\u0E25\u0E30\u0E04\u0E27\u0E32\u0E21\u0E40\u0E2A\u0E35\u0E48\u0E22\u0E07 \u0E44\u0E21\u0E48\u0E43\u0E0A\u0E48\u0E04\u0E33\u0E2A\u0E31\u0E48\u0E07\u0E0B\u0E37\u0E49\u0E2D\u0E02\u0E32\u0E22";
-const STARTER_TEXT = "\u0E2A\u0E48\u0E07\u0E41\u0E1C\u0E19\u0E40\u0E17\u0E23\u0E14\u0E2B\u0E23\u0E37\u0E2D\u0E23\u0E39\u0E1B\u0E01\u0E23\u0E32\u0E1F\u0E21\u0E32\u0E44\u0E14\u0E49\u0E40\u0E25\u0E22 Buddy \u0E08\u0E30\u0E0A\u0E48\u0E27\u0E22\u0E40\u0E0A\u0E47\u0E01 Stop Loss, R 1:2, \u0E17\u0E38\u0E19 500, \u0E41\u0E25\u0E30 daily stop \u0E41\u0E1A\u0E1A rule-based";
+const STARTER_TEXT = "ส่งแผนเทรดหรือรูปกราฟมาได้เลย Buddy จะช่วยเช็ก Stop Loss, R 1:2, ทุนจากฝาก/ถอน และ daily stop แบบ rule-based";
 
 export default function TradeBuddyChat({ context = {} }: { context?: ChatContext }) {
   const starter = useMemo<ChatMessage>(
@@ -63,9 +63,9 @@ export default function TradeBuddyChat({ context = {} }: { context?: ChatContext
             <button className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-bold text-slate-300" onClick={clearChat}>Clear chat</button>
           </div>
           <div className="mt-4 grid gap-2 sm:grid-cols-3">
-            <InfoChip label="Capital" value="500 THB" />
-            <InfoChip label="Risk per trade" value="5-10 THB" />
-            <InfoChip label="Daily stop" value="-20 THB" />
+            <InfoChip label="Capital" value="ตามฝาก/ถอน" />
+            <InfoChip label="Risk per trade" value="1-2%" />
+            <InfoChip label="Daily stop" value="-$0.60 (21 THB)" />
           </div>
         </header>
 

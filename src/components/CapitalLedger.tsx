@@ -1,0 +1,77 @@
+"use client";
+
+import { FormEvent, useEffect, useState } from "react";
+import { formatUsdWithThb, loadCapitalTransactions, saveCapitalTransactions, summarizeCapital } from "@/lib/capitalStorage";
+import type { CapitalTransaction, CapitalTransactionType } from "@/types/capital";
+
+export default function CapitalLedger({ compact = false }: { compact?: boolean }) {
+  const [items, setItems] = useState<CapitalTransaction[]>([]);
+  const [type, setType] = useState<CapitalTransactionType>("deposit");
+  const [amountUsd, setAmountUsd] = useState("");
+  const [note, setNote] = useState("");
+
+  useEffect(() => {
+    setItems(loadCapitalTransactions());
+  }, []);
+
+  const summary = summarizeCapital(items);
+
+  function commit(next: CapitalTransaction[]) {
+    setItems(next);
+    saveCapitalTransactions(next);
+  }
+
+  function submit(event: FormEvent) {
+    event.preventDefault();
+    const amount = Number(amountUsd);
+    if (!Number.isFinite(amount) || amount <= 0) return;
+    commit([{ id: crypto.randomUUID(), createdAt: new Date().toISOString(), type, amountUsd: amount, note }, ...items]);
+    setAmountUsd("");
+    setNote("");
+  }
+
+  return (
+    <section className="rounded-3xl border border-emerald-300/25 bg-emerald-300/10 p-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-100">Capital Ledger</p>
+          <h3 className="mt-1 text-2xl font-black text-white">{formatUsdWithThb(summary.balanceUsd)}</h3>
+          <p className="mt-1 text-sm font-semibold text-emerald-50/80">บันทึกฝาก/ถอนเพื่อคำนวณทุนปัจจุบัน</p>
+        </div>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <Mini label="ฝากรวม" value={formatUsdWithThb(summary.depositsUsd)} />
+          <Mini label="ถอนรวม" value={formatUsdWithThb(summary.withdrawalsUsd)} />
+        </div>
+      </div>
+
+      {!compact ? (
+        <>
+          <form className="mt-4 grid gap-2 sm:grid-cols-[0.8fr_1fr_1.2fr_auto]" onSubmit={submit}>
+            <select className="min-h-12 rounded-2xl border border-slate-700 bg-slate-950 px-3 font-bold text-white" value={type} onChange={(event) => setType(event.target.value as CapitalTransactionType)}>
+              <option value="deposit">ฝากทุน</option>
+              <option value="withdraw">ถอนทุน</option>
+            </select>
+            <input className="min-h-12 rounded-2xl border border-slate-700 bg-slate-950 px-3 font-bold text-white" inputMode="decimal" placeholder="จำนวน USD" type="number" value={amountUsd} onChange={(event) => setAmountUsd(event.target.value)} />
+            <input className="min-h-12 rounded-2xl border border-slate-700 bg-slate-950 px-3 font-bold text-white" placeholder="โน้ต เช่น เติมทุน" value={note} onChange={(event) => setNote(event.target.value)} />
+            <button className="min-h-12 rounded-2xl bg-emerald-300 px-4 font-black text-slate-950" type="submit">บันทึก</button>
+          </form>
+          <div className="mt-3 grid gap-2">
+            {items.slice(0, 5).map((item) => (
+              <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-slate-950/50 p-3 text-sm" key={item.id}>
+                <div>
+                  <p className="font-black text-white">{item.type === "deposit" ? "ฝากทุน" : "ถอนทุน"} {formatUsdWithThb(item.amountUsd)}</p>
+                  <p className="text-xs text-slate-400">{item.note || "ไม่มีโน้ต"}</p>
+                </div>
+                <button className="text-xs font-black text-red-100" onClick={() => commit(items.filter((current) => current.id !== item.id))} type="button">ลบ</button>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : null}
+    </section>
+  );
+}
+
+function Mini({ label, value }: { label: string; value: string }) {
+  return <div className="rounded-2xl border border-white/10 bg-slate-950/50 p-3"><p className="text-xs font-bold text-emerald-100/70">{label}</p><p className="font-black text-white">{value}</p></div>;
+}

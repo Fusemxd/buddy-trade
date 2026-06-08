@@ -4,12 +4,12 @@ import type { ChatActionCard, ChatContext } from "@/types/chat";
 // TODO: Replace rule-based reply with API route later
 // TODO: Keep this file as the deterministic fallback when AI is unavailable
 export const quickPrompts = [
-  "\u0E23\u0E39\u0E1B\u0E19\u0E35\u0E49\u0E04\u0E27\u0E23\u0E40\u0E02\u0E49\u0E32\u0E44\u0E2B\u0E21?",
-  "\u0E0A\u0E48\u0E27\u0E22\u0E04\u0E33\u0E19\u0E27\u0E13 Risk \u0E43\u0E2B\u0E49\u0E2B\u0E19\u0E48\u0E2D\u0E22",
-  "SL/TP \u0E41\u0E1A\u0E1A\u0E19\u0E35\u0E49\u0E42\u0E2D\u0E40\u0E04\u0E44\u0E2B\u0E21?",
-  "\u0E09\u0E31\u0E19\u0E01\u0E33\u0E25\u0E31\u0E07\u0E44\u0E25\u0E48\u0E23\u0E32\u0E04\u0E32\u0E2D\u0E22\u0E39\u0E48\u0E44\u0E2B\u0E21?",
-  "\u0E17\u0E38\u0E19 500 \u0E40\u0E2A\u0E35\u0E48\u0E22\u0E07\u0E40\u0E01\u0E34\u0E19\u0E44\u0E1B\u0E44\u0E2B\u0E21?",
-  "\u0E1A\u0E31\u0E19\u0E17\u0E36\u0E01\u0E41\u0E1C\u0E19\u0E19\u0E35\u0E49\u0E40\u0E02\u0E49\u0E32 Journal"
+  "รูปนี้ควรเฝ้าดูไหม?",
+  "ช่วยคำนวณ Risk ให้หน่อย",
+  "SL/TP แบบนี้โอเคไหม?",
+  "ฉันกำลังไล่ราคาอยู่ไหม?",
+  "ทุนตอนนี้เสี่ยงเกินไปไหม?",
+  "บันทึกแผนนี้เข้า Journal"
 ];
 
 export type BuddyReply = {
@@ -22,27 +22,27 @@ export function generateBuddyReply(messageText: string, context: ChatContext = {
   const actionCards: ChatActionCard[] = [];
   let reply = DEFAULT_REPLY;
 
-  if (includesAny(text, ["\u0E40\u0E02\u0E49\u0E32\u0E44\u0E2B\u0E21", "\u0E04\u0E27\u0E23\u0E40\u0E02\u0E49\u0E32"])) {
-    reply = "\u0E2D\u0E22\u0E48\u0E32\u0E40\u0E1E\u0E34\u0E48\u0E07\u0E15\u0E31\u0E14\u0E2A\u0E34\u0E19\u0E43\u0E08\u0E08\u0E32\u0E01\u0E20\u0E32\u0E1E\u0E2D\u0E22\u0E48\u0E32\u0E07\u0E40\u0E14\u0E35\u0E22\u0E27 \u0E40\u0E0A\u0E47\u0E01\u0E01\u0E48\u0E2D\u0E19\u0E27\u0E48\u0E32 Stop Loss \u0E21\u0E35\u0E41\u0E25\u0E49\u0E27\u0E44\u0E2B\u0E21, R \u0E16\u0E36\u0E07 1:2 \u0E44\u0E2B\u0E21, \u0E41\u0E25\u0E30\u0E27\u0E31\u0E19\u0E19\u0E35\u0E49\u0E02\u0E32\u0E14\u0E17\u0E38\u0E19\u0E16\u0E36\u0E07\u0E25\u0E34\u0E21\u0E34\u0E15\u0E2B\u0E23\u0E37\u0E2D\u0E22\u0E31\u0E07";
+  if (includesAny(text, ["เข้าไหม", "ควรเข้า", "ควรเฝ้าดู"])) {
+    reply = "อย่าเพิ่งตัดสินใจจากภาพอย่างเดียว เช็กก่อนว่า Stop Loss มีแล้วไหม, R ถึง 1:2 ไหม, และวันนี้แตะ Daily Stop หรือยัง";
     actionCards.push({ type: "checklist" });
-  } else if (includesAny(text, ["\u0E44\u0E25\u0E48\u0E23\u0E32\u0E04\u0E32", "\u0E41\u0E17\u0E48\u0E07\u0E40\u0E02\u0E35\u0E22\u0E27", "\u0E1E\u0E38\u0E48\u0E07"])) {
-    reply = "\u0E23\u0E30\u0E27\u0E31\u0E07\u0E01\u0E32\u0E23\u0E44\u0E25\u0E48\u0E23\u0E32\u0E04\u0E32 \u0E16\u0E49\u0E32 RSI \u0E2A\u0E39\u0E07\u0E01\u0E27\u0E48\u0E32 70 \u0E2B\u0E23\u0E37\u0E2D\u0E23\u0E32\u0E04\u0E32\u0E2B\u0E48\u0E32\u0E07 EMA \u0E21\u0E32\u0E01 \u0E04\u0E27\u0E23\u0E23\u0E2D\u0E22\u0E48\u0E2D\u0E01\u0E48\u0E2D\u0E19";
-    actionCards.push({ type: "warning", message: "\u0E2D\u0E22\u0E48\u0E32\u0E44\u0E25\u0E48\u0E23\u0E32\u0E04\u0E32" });
-  } else if (includesAny(text, ["risk", "\u0E40\u0E2A\u0E35\u0E48\u0E22\u0E07", "\u0E17\u0E38\u0E19 500", "500"])) {
-    reply = "\u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A\u0E17\u0E38\u0E19 500 \u0E1A\u0E32\u0E17 \u0E04\u0E27\u0E23\u0E40\u0E2A\u0E35\u0E48\u0E22\u0E07\u0E15\u0E48\u0E2D\u0E44\u0E21\u0E49\u0E1B\u0E23\u0E30\u0E21\u0E32\u0E13 5\u201310 \u0E1A\u0E32\u0E17 \u0E41\u0E25\u0E30\u0E2B\u0E22\u0E38\u0E14\u0E17\u0E31\u0E19\u0E17\u0E35\u0E16\u0E49\u0E32\u0E27\u0E31\u0E19\u0E19\u0E35\u0E49\u0E02\u0E32\u0E14\u0E17\u0E38\u0E19\u0E16\u0E36\u0E07 -20 \u0E1A\u0E32\u0E17";
+  } else if (includesAny(text, ["ไล่ราคา", "แท่งเขียว", "พุ่ง"])) {
+    reply = "ระวังการไล่ราคา ถ้า RSI สูงกว่า 70 หรือราคาห่าง EMA มาก ควรรอให้จังหวะเย็นลงก่อน";
+    actionCards.push({ type: "warning", message: "ระวังการไล่ราคา" });
+  } else if (includesAny(text, ["risk", "เสี่ยง", "ทุน", "capital"])) {
+    reply = "ให้ใช้ทุนจากบันทึกฝาก/ถอนเป็นฐาน แล้วเสี่ยงต่อไม้ประมาณ 1-2% เท่านั้น ถ้าวันนี้ใกล้ Daily Stop ให้พักก่อน";
     actionCards.push({ type: "risk_calculator" });
-  } else if (includesAny(text, ["sl", "stop loss", "\u0E02\u0E32\u0E14\u0E17\u0E38\u0E19"])) {
-    reply = "\u0E04\u0E27\u0E23\u0E01\u0E33\u0E2B\u0E19\u0E14 Stop Loss \u0E01\u0E48\u0E2D\u0E19\u0E40\u0E02\u0E49\u0E32\u0E40\u0E2A\u0E21\u0E2D \u0E16\u0E49\u0E32 SL \u0E17\u0E33\u0E43\u0E2B\u0E49\u0E40\u0E2A\u0E35\u0E22\u0E40\u0E01\u0E34\u0E19 10 \u0E1A\u0E32\u0E17\u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A\u0E17\u0E38\u0E19 500 \u0E1A\u0E32\u0E17 \u0E41\u0E1C\u0E19\u0E19\u0E31\u0E49\u0E19\u0E40\u0E2A\u0E35\u0E48\u0E22\u0E07\u0E40\u0E01\u0E34\u0E19\u0E44\u0E1B";
+  } else if (includesAny(text, ["sl", "stop loss", "ขาดทุน"])) {
+    reply = "ควรกำหนด Stop Loss ก่อนทำแผนเสมอ ถ้า SL ทำให้เสียเกิน 1-2% ของทุน แผนนั้นเสี่ยงเกินไปสำหรับทุนเล็ก";
     actionCards.push({ type: "risk_calculator" });
-  } else if (includesAny(text, ["tp", "take profit", "\u0E01\u0E33\u0E44\u0E23"])) {
-    reply = "\u0E15\u0E31\u0E49\u0E07 TP \u0E43\u0E2B\u0E49\u0E2A\u0E31\u0E21\u0E1E\u0E31\u0E19\u0E18\u0E4C\u0E01\u0E31\u0E1A SL \u0E2D\u0E22\u0E48\u0E32\u0E07\u0E19\u0E49\u0E2D\u0E22 R 1:2 \u0E40\u0E0A\u0E48\u0E19 \u0E40\u0E2A\u0E35\u0E48\u0E22\u0E07 5 \u0E1A\u0E32\u0E17 \u0E04\u0E27\u0E23\u0E21\u0E35\u0E42\u0E2D\u0E01\u0E32\u0E2A\u0E44\u0E14\u0E49\u0E2D\u0E22\u0E48\u0E32\u0E07\u0E19\u0E49\u0E2D\u0E22 10 \u0E1A\u0E32\u0E17";
-  } else if (includesAny(text, ["journal", "\u0E1A\u0E31\u0E19\u0E17\u0E36\u0E01"])) {
-    reply = "\u0E1A\u0E31\u0E19\u0E17\u0E36\u0E01\u0E41\u0E1C\u0E19\u0E44\u0E27\u0E49\u0E43\u0E19 Journal \u0E42\u0E14\u0E22\u0E43\u0E2A\u0E48 Entry, SL, TP, \u0E2D\u0E32\u0E23\u0E21\u0E13\u0E4C, \u0E40\u0E2B\u0E15\u0E38\u0E1C\u0E25\u0E01\u0E32\u0E23\u0E40\u0E02\u0E49\u0E32 \u0E41\u0E25\u0E30\u0E2B\u0E21\u0E32\u0E22\u0E40\u0E2B\u0E15\u0E38";
+  } else if (includesAny(text, ["tp", "take profit", "กำไร"])) {
+    reply = "ตั้ง TP ให้สัมพันธ์กับ SL อย่างน้อย R 1:2 เช่น เสี่ยง $1 ควรมีโอกาสได้อย่างน้อย $2 ตามแผน ไม่ใช่อารมณ์";
+  } else if (includesAny(text, ["journal", "บันทึก"])) {
+    reply = "บันทึกไว้ใน Journal ได้เลย โดยกรอกเหรียญ ราคาเข้า จำนวนเงินที่เล่น ผลได้/เสีย ระยะเวลา และโน้ตสั้น ๆ ก็พอสำหรับเวอร์ชันใช้ง่าย";
     actionCards.push({ type: "journal_save" });
   }
 
   if (hasImage) {
-    reply += " \u0E15\u0E2D\u0E19\u0E19\u0E35\u0E49\u0E23\u0E30\u0E1A\u0E1A\u0E1A\u0E31\u0E19\u0E17\u0E36\u0E01\u0E20\u0E32\u0E1E\u0E44\u0E27\u0E49\u0E41\u0E25\u0E49\u0E27 \u0E41\u0E15\u0E48\u0E22\u0E31\u0E07\u0E44\u0E21\u0E48\u0E44\u0E14\u0E49\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E20\u0E32\u0E1E\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 \u0E15\u0E49\u0E2D\u0E07\u0E43\u0E0A\u0E49\u0E23\u0E48\u0E27\u0E21\u0E01\u0E31\u0E1A Checklist \u0E41\u0E25\u0E30 Risk Calculator \u0E01\u0E48\u0E2D\u0E19";
+    reply += " ตอนนี้ระบบบันทึกภาพไว้แล้ว แต่ยังไม่ได้วิเคราะห์ภาพอัตโนมัติ ต้องใช้ร่วมกับ Checklist และ Risk Calculator ก่อน";
   }
 
   if (context.riskWarnings?.length) {
@@ -56,7 +56,7 @@ export function getRuleBasedReply(message: string, context: ChatContext) {
   return generateBuddyReply(message, context).text;
 }
 
-const DEFAULT_REPLY = "\u0E23\u0E31\u0E1A\u0E17\u0E23\u0E32\u0E1A \u0E40\u0E14\u0E35\u0E4B\u0E22\u0E27\u0E43\u0E0A\u0E49 Checklist \u0E41\u0E25\u0E30 Risk Calculator \u0E0A\u0E48\u0E27\u0E22\u0E40\u0E0A\u0E47\u0E01\u0E41\u0E1C\u0E19\u0E43\u0E2B\u0E49\u0E44\u0E14\u0E49 \u0E25\u0E2D\u0E07\u0E1E\u0E34\u0E21\u0E1E\u0E4C Entry, SL, TP \u0E2B\u0E23\u0E37\u0E2D\u0E01\u0E14\u0E1B\u0E38\u0E48\u0E21\u0E04\u0E33\u0E19\u0E27\u0E13 Risk";
+const DEFAULT_REPLY = "รับทราบ เดี๋ยวใช้ Checklist และ Risk Calculator ช่วยเช็กแผนให้ได้ ลองพิมพ์ Entry, SL, TP หรือกดปุ่มคำนวณ Risk";
 
 function includesAny(text: string, patterns: string[]) {
   return patterns.some((pattern) => text.includes(pattern.toLowerCase()));

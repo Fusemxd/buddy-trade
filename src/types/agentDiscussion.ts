@@ -31,6 +31,7 @@ export type AgentDiscussionInput = {
   ema50?: number;
   capital?: number;
   riskAmount?: number;
+  riskPercent?: number;
   riskReward?: number;
   todayPnl?: number;
   losingStreak?: number;

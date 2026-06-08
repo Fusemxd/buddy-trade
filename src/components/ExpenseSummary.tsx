@@ -1,3 +1,4 @@
+import { formatUsdWithThb } from "@/lib/capitalStorage";
 import { summarizeExpenses } from "@/lib/expenseStorage";
 import type { ExpenseRecord } from "@/types/expense";
 
@@ -5,11 +6,11 @@ export default function ExpenseSummary({ expenses }: { expenses: ExpenseRecord[]
   const summary = summarizeExpenses(expenses);
   return (
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      <Metric label="This month" value={`${summary.total} THB`} />
-      <Metric label="API cost" value={`${summary.apiCost} THB`} />
-      <Metric label="Subscription" value={`${summary.subscription} THB`} />
-      <Metric label="Trading fees" value={`${summary.tradingFees} THB`} />
-      {summary.total > 500 ? <p className="rounded-2xl border border-yellow-300/35 bg-yellow-300/10 p-3 text-sm font-bold text-yellow-100 sm:col-span-2 xl:col-span-4">ค่าใช้จ่ายเดือนนี้สูงกว่าทุนเริ่มต้น ควรทบทวนว่าคุ้มไหม</p> : null}
+      <Metric label="This month" value={formatUsdWithThb(summary.total)} />
+      <Metric label="API cost" value={formatUsdWithThb(summary.apiCost)} />
+      <Metric label="Subscription" value={formatUsdWithThb(summary.subscription)} />
+      <Metric label="Trading fees" value={formatUsdWithThb(summary.tradingFees)} />
+      {summary.total > 20 ? <p className="rounded-2xl border border-yellow-300/35 bg-yellow-300/10 p-3 text-sm font-bold text-yellow-100 sm:col-span-2 xl:col-span-4">ค่าใช้จ่ายเดือนนี้สูง ควรทบทวนว่าคุ้มกับทุนและการใช้งานไหม</p> : null}
     </div>
   );
 }

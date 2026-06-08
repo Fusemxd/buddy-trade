@@ -34,7 +34,7 @@ export default function RiskCalculator({ onRiskChange }: { onRiskChange?: (risk:
       </div>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <NumberField label="Capital THB" value={capitalThb} onChange={setCapitalThb} />
+        <NumberField label="Capital USD" value={capitalThb} onChange={setCapitalThb} />
         <NumberField label="Risk %" value={riskPercent} onChange={setRiskPercent} step={0.25} />
         <NumberField label="Entry price" value={entry} onChange={setEntry} step={0.0001} />
         <NumberField label="Stop Loss price" value={stopLoss} onChange={setStopLoss} step={0.0001} />
@@ -42,7 +42,7 @@ export default function RiskCalculator({ onRiskChange }: { onRiskChange?: (risk:
       </div>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        <ResultCard label="Risk amount" value={`${risk.riskAmountThb} THB`} />
+        <ResultCard label="Risk amount" value={`$${risk.riskAmountThb}`} />
         <ResultCard label="Estimated position size" value={risk.positionSize > 0 ? risk.positionSize.toString() : "-"} />
         <ResultCard label="Risk / Reward" value={risk.rewardRatioText} />
       </div>

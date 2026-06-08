@@ -44,8 +44,8 @@ export function analyzeJournal(entries: JournalEntry[]): JournalAnalytics {
     durationSummary: durations.map(({ value, count }) => ({ duration: value, count })),
     strategyPerformance: strategies,
     insights: insights.length ? insights : ["ยังไม่มี insight เชิงลบเด่นชัดจาก Journal"],
-    weeklySummary: `7 วันล่าสุด P/L ${sumPnl(weeklyEntries)} THB จาก ${weeklyEntries.length} ไม้`,
-    monthlySummary: `เดือนนี้ P/L ${sumPnl(monthlyEntries)} THB จาก ${monthlyEntries.length} ไม้`
+    weeklySummary: `7 วันล่าสุด P/L $${sumPnl(weeklyEntries)} จาก ${weeklyEntries.length} ไม้`,
+    monthlySummary: `เดือนนี้ P/L $${sumPnl(monthlyEntries)} จาก ${monthlyEntries.length} ไม้`
   };
 }
 

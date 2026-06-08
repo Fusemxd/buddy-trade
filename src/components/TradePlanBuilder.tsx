@@ -14,7 +14,7 @@ export default function TradePlanBuilder({ initialSymbol = "BTCUSDT" }: { initia
   const [stopLoss, setStopLoss] = useState(95);
   const [takeProfit1, setTakeProfit1] = useState(110);
   const [takeProfit2, setTakeProfit2] = useState(115);
-  const [capital, setCapital] = useState(500);
+  const [capital, setCapital] = useState(20);
   const [riskPercent, setRiskPercent] = useState(1);
   const [plan, setPlan] = useState<TradePlan | null>(null);
 
@@ -39,7 +39,7 @@ export default function TradePlanBuilder({ initialSymbol = "BTCUSDT" }: { initia
         <Field label="Stop Loss" value={stopLoss} onChange={setStopLoss} type="number" />
         <Field label="Take Profit 1" value={takeProfit1} onChange={setTakeProfit1} type="number" />
         <Field label="Take Profit 2" value={takeProfit2} onChange={setTakeProfit2} type="number" />
-        <Field label="Capital" value={capital} onChange={setCapital} type="number" />
+        <Field label="Capital USD" value={capital} onChange={setCapital} type="number" />
         <Field label="Risk %" value={riskPercent} onChange={setRiskPercent} type="number" />
         <button className="min-h-12 rounded-2xl bg-cyan-300 px-4 font-black text-slate-950 sm:col-span-2">สร้างแผน</button>
       </form>

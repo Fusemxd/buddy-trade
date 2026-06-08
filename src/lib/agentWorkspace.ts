@@ -55,7 +55,7 @@ export const tradeBuddyAgents: TradeBuddyAgent[] = [
 
 export const agentDeskItems: AgentDeskItem[] = [
   { id: "market", title: "Market Monitor", subtitle: "Public Binance klines", status: "Rule-based" },
-  { id: "risk", title: "Risk Desk", subtitle: "500 THB discipline", status: "1-2% risk" },
+  { id: "risk", title: "Risk Desk", subtitle: "Deposit-based capital", status: "1-2% risk" },
   { id: "checklist", title: "Setup Review", subtitle: "No emotional entries", status: "Stop loss first" },
   { id: "journal", title: "Journal Cabinet", subtitle: "Saved locally", status: "localStorage" },
   { id: "chat", title: "Buddy Chat", subtitle: "Education support", status: "No trade calls" }

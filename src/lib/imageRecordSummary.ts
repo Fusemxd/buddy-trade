@@ -21,7 +21,7 @@ export function generateImageRecordSummary(records: ImageRecord[], expenses: Exp
 
   if (pendingReview > 0) insights.push("มีรายการที่ยังไม่ได้ตรวจสอบ");
   if (tradeScreenshots > journalDrafts) insights.push("มีภาพเทรดบางรายการที่ยังไม่ได้บันทึก Journal");
-  if (expenseSummary.total > 500) insights.push("ค่าใช้จ่ายเดือนนี้สูงกว่าทุนเริ่มต้น 500 บาท");
+  if (expenseSummary.total > 20) insights.push("ค่าใช้จ่ายเดือนนี้สูง ควรเทียบกับทุนจากบันทึกฝาก/ถอน");
   if (expenseSummary.apiCost > 0) insights.push("มีค่า API เดือนนี้ ควรติดตามว่าคุ้มกับการใช้งานไหม");
   if (receiptImages === 0) insights.push("ยังไม่มีใบเสร็จค่าใช้จ่าย ลองเริ่มจากค่าสมัครหรือค่า API");
   if (tradeScreenshots === 0) insights.push("ยังไม่มีภาพเทรดนำเข้า");

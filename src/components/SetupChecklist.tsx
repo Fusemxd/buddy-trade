@@ -32,7 +32,7 @@ export default function SetupChecklist({ risk }: { risk?: RiskResult }) {
     () => [
       { label: "Stop Loss is already planned", complete: risk?.hasStopLoss ?? false },
       { label: "Risk/Reward is at least 1:2", complete: risk?.isRewardValid ?? false },
-      { label: "Risk per trade is not over 10 THB", complete: risk?.isRiskAmountValid ?? false }
+      { label: "Risk per trade stays within 1-2%", complete: risk?.isRiskAmountValid ?? false }
     ],
     [risk]
   );

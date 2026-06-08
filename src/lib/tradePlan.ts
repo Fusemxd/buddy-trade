@@ -1,4 +1,5 @@
-import { saveJournal, loadJournal } from "./journal";
+import { DEFAULT_DAILY_LOSS_LIMIT_THB } from "./dailyStop";
+import { loadJournal, saveJournal } from "./journal";
 import { calculateSetupQuality } from "./setupScanner";
 import type { TradePlan, TradePlanInput } from "@/types/tradePlan";
 
@@ -14,8 +15,8 @@ export function buildTradePlan(input: TradePlanInput): TradePlan {
 
   if (!input.stopLoss || riskDistance === 0) warnings.push("ยังไม่มี Stop Loss");
   if (rewardRiskToTp1 < 2) warnings.push("R:R ต่ำกว่า 1:2");
-  if (riskAmount > 10) warnings.push("ทุน 500 บาทไม่ควรเสี่ยงเกิน 5-10 บาทต่อไม้");
-  if ((input.todayPnl ?? 0) <= -20) warnings.push("วันนี้แตะ Daily Stop แล้ว ควรหยุด");
+  if (input.riskPercent > 2) warnings.push("Risk ต่อไม้เกิน 2% ของทุน");
+  if ((input.todayPnl ?? 0) <= DEFAULT_DAILY_LOSS_LIMIT_THB) warnings.push("วันนี้แตะ Daily Stop แล้ว ควรพักก่อน");
   if ((input.losingStreak ?? 0) >= 2) warnings.push("แพ้ติดกัน 2 ไม้ พักก่อน อย่าแก้มือ");
 
   const blocked = warnings.length > 0;
@@ -23,7 +24,7 @@ export function buildTradePlan(input: TradePlanInput): TradePlan {
     riskReward: rewardRiskToTp1,
     riskAmount,
     hasStopLoss: Boolean(input.stopLoss && riskDistance > 0),
-    dailyStopReached: (input.todayPnl ?? 0) <= -20,
+    dailyStopReached: (input.todayPnl ?? 0) <= DEFAULT_DAILY_LOSS_LIMIT_THB,
     losingStreak: input.losingStreak
   });
 
@@ -51,8 +52,8 @@ export function copyPlanText(plan: TradePlan) {
     `Stop Loss: ${plan.stopLoss}`,
     `Take Profit 1: ${plan.takeProfit1}`,
     `Take Profit 2: ${plan.takeProfit2 ?? "-"}`,
-    `Capital: ${plan.capital}`,
-    `Risk Amount: ${plan.riskAmount}`,
+    `Capital: $${plan.capital}`,
+    `Risk Amount: $${plan.riskAmount}`,
     `Position Size: ${plan.positionSize}`,
     `R:R: 1:${plan.rewardRiskToTp1}`,
     `Setup Quality: ${plan.quality.label} (${plan.quality.score})`,

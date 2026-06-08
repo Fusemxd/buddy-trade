@@ -9,6 +9,7 @@ import type { ExpenseRecord } from "@/types/expense";
 import type { ImageRecord } from "@/types/imageRecord";
 import type { JournalEntry } from "@/types/journal";
 import type { MobileWarRoomPanel } from "./MobileBottomNav";
+import CapitalLedger from "./CapitalLedger";
 import DailySummaryCard from "./DailySummaryCard";
 import RiskSummaryCard from "./RiskSummaryCard";
 
@@ -43,7 +44,11 @@ export default function DashboardOverview({ onNavigate }: { onNavigate: (page: M
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
+        <CapitalLedger />
         <RiskSummaryCard />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
         <DailySummaryCard />
       </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { formatUsdWithThb } from "@/lib/capitalStorage";
 import type { ImageRecordSummary } from "@/types/imageRecord";
 
 export default function AutoImageSummary({ summary }: { summary: ImageRecordSummary }) {
@@ -14,17 +15,17 @@ export default function AutoImageSummary({ summary }: { summary: ImageRecordSumm
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <Metric label="ภาพที่นำเข้าทั้งหมด" value={summary.totalImages} />
         <Metric label="ภาพเทรด" value={summary.tradeScreenshots} helper={`Journal drafts ${summary.journalDrafts} | Plan drafts ${summary.tradePlanDrafts}`} />
-        <Metric label="ใบเสร็จ / ค่าใช้จ่าย" value={summary.receiptImages} helper={`เดือนนี้ ${summary.monthlyExpenseTotal} THB`} />
+        <Metric label="ใบเสร็จ / ค่าใช้จ่าย" value={summary.receiptImages} helper={`เดือนนี้ ${formatUsdWithThb(summary.monthlyExpenseTotal)}`} />
         <Metric label="รอตรวจสอบ" value={summary.pendingReview} helper={`ยืนยันแล้ว ${summary.confirmedRecords}`} />
       </div>
       <div className="grid gap-3 md:grid-cols-2">
         <Panel title="ต้นทุนเดือนนี้">
-          <MetricRow label="ค่า API" value={`${summary.monthlyApiCost} THB`} />
-          <MetricRow label="ค่าสมัครสมาชิก" value={`${summary.monthlySubscriptionCost} THB`} />
+          <MetricRow label="ค่า API" value={formatUsdWithThb(summary.monthlyApiCost)} />
+          <MetricRow label="ค่าสมัครสมาชิก" value={formatUsdWithThb(summary.monthlySubscriptionCost)} />
         </Panel>
         <Panel title="ผลลัพธ์จาก Journal">
           <MetricRow label="Win / Loss / BE" value={`${summary.winCount ?? 0} / ${summary.lossCount ?? 0} / ${summary.breakEvenCount ?? 0}`} />
-          <MetricRow label="P/L รวม" value={`${summary.screenshotLinkedPnL ?? 0} THB`} />
+          <MetricRow label="P/L รวม" value={formatUsdWithThb(summary.screenshotLinkedPnL ?? 0)} />
         </Panel>
       </div>
       <div className="grid gap-3 md:grid-cols-2">

@@ -1,3 +1,4 @@
+import { DEFAULT_DAILY_LOSS_LIMIT_THB } from "@/lib/dailyStop";
 import type { DirectionBiasInput, DirectionBiasResult } from "@/types/directionBias";
 
 export function calculateDirectionBias(input: DirectionBiasInput): DirectionBiasResult {
@@ -51,7 +52,7 @@ export function calculateDirectionBias(input: DirectionBiasInput): DirectionBias
     longScore -= 3;
     shortScore -= 3;
   }
-  if (todayPnl <= -20) {
+  if (todayPnl <= DEFAULT_DAILY_LOSS_LIMIT_THB) {
     longScore -= 5;
     shortScore -= 5;
   }
@@ -60,7 +61,7 @@ export function calculateDirectionBias(input: DirectionBiasInput): DirectionBias
     shortScore -= 5;
   }
 
-  if (todayPnl <= -20) return result(input, "BLOCKED", longScore, shortScore, "ยังไม่ควรทำแผนต่อ เพราะเงื่อนไขความเสี่ยงไม่ผ่าน", "พักก่อน เพราะถึง Daily Stop แล้ว", details);
+  if (todayPnl <= DEFAULT_DAILY_LOSS_LIMIT_THB) return result(input, "BLOCKED", longScore, shortScore, "ยังไม่ควรทำแผนต่อ เพราะเงื่อนไขความเสี่ยงไม่ผ่าน", "พักก่อน เพราะถึง Daily Stop แล้ว", details);
   if (losingStreak >= 2) return result(input, "BLOCKED", longScore, shortScore, "ยังไม่ควรทำแผนต่อ เพราะเงื่อนไขความเสี่ยงไม่ผ่าน", "พักก่อน เพราะแพ้ติดกัน 2 ไม้", details);
   if (!hasStopLoss) return result(input, "BLOCKED", longScore, shortScore, "ยังไม่ควรทำแผนต่อ เพราะเงื่อนไขความเสี่ยงไม่ผ่าน", "ไปกรอก Entry / SL / TP", details);
   if (longScore >= 5 && longScore > shortScore) return result(input, "LONG_BIAS", longScore, shortScore, "ฝั่งขึ้นเริ่มมีน้ำหนัก แต่ยังต้องมี Entry, Stop Loss และ Take Profit ก่อน", "เช็ก Risk Calculator", details);

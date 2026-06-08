@@ -4,7 +4,7 @@
 
 ### Description
 
-Trade Buddy War Room is a chat-first, rule-based trading assistant for beginner traders with small capital. It helps users check market status, calculate risk, review trading setups, keep a trade journal, and ask Buddy questions with optional chart screenshots.
+Trade Buddy War Room is a chat-first, rule-based trading assistant for beginner traders with small capital. It helps users review public market status, calculate risk, check trading discipline, keep a journal, track deposits and withdrawals, and ask Buddy questions with optional chart screenshots.
 
 ### Important Safety Disclaimer
 
@@ -20,6 +20,9 @@ Trade Buddy War Room is an educational risk-management assistant. It does not pr
 - Mini price charts from public candles
 - EMA20 / EMA50 / RSI14
 - Rule-based market status
+- Direction Bias Helper
+- Deposit / withdrawal capital ledger
+- USD-first display with THB reference in parentheses
 - Risk Calculator
 - Setup Checklist
 - Trade Journal
@@ -47,8 +50,15 @@ Trade Buddy War Room is an educational risk-management assistant. It does not pr
 - No Binance API key is required.
 - No exchange account connection is used.
 - Only public market data is fetched.
-- Custom watchlist supports Binance crypto USDT symbols such as BTCUSDT, ETHUSDT, SOLUSDT, BNBUSDT, XRPUSDT, DOGEUSDT, ADAUSDT, LINKUSDT, AVAXUSDT, and SUIUSDT.
 - Data is used for planning and risk review only. It is not a trading command.
+
+### Capital And Currency
+
+- Capital is no longer hardcoded.
+- Users can record deposits and withdrawals in the capital ledger.
+- USD is the main currency.
+- THB is shown as a small reference in parentheses using a local estimated conversion.
+- Risk should be reviewed as a percentage of current capital, usually 1-2% per trade.
 
 ### Install
 
@@ -70,11 +80,11 @@ npm run build
 
 ### Deploy on Vercel
 
-1. Push the project to GitHub
-2. Import the repository into Vercel
-3. Framework: Next.js
-4. Build command: `npm run build`
-5. Deploy
+1. Push the project to GitHub.
+2. Import the repository into Vercel.
+3. Framework: Next.js.
+4. Build command: `npm run build`.
+5. Deploy.
 
 ### Future AI API Notes
 
@@ -83,16 +93,6 @@ npm run build
 - API keys must not be exposed on the client.
 - Future AI calls should happen in server routes only, such as `src/app/api/chat/route.ts`.
 - Add AI API environment variables later only when the server route is implemented.
-
-### Future Roadmap
-
-- AI Vision for chart screenshot analysis
-- AI chat API integration
-- Market context injection into chat
-- Risk context injection into chat
-- Journal context injection into chat
-- Better backtesting tools
-- Improved agent animations
 
 ### Current Limitations
 
@@ -105,7 +105,7 @@ npm run build
 
 ### คำอธิบาย
 
-Trade Buddy War Room คือผู้ช่วยเทรดแบบ chat-first และ rule-based สำหรับมือใหม่ที่มีทุนน้อย โดยออกแบบให้เหมาะกับผู้ใช้ทุนประมาณ 500 บาท ช่วยเช็กภาพรวมตลาด คำนวณความเสี่ยง ตรวจแผนเทรด บันทึก Journal และถาม Buddy พร้อมแนบรูปกราฟได้
+Trade Buddy War Room คือผู้ช่วยเทรดแบบ chat-first และ rule-based สำหรับมือใหม่ที่มีทุนน้อย ช่วยเช็กภาพรวมตลาด คำนวณความเสี่ยง ตรวจวินัยก่อนทำแผน บันทึก Journal บันทึกฝาก/ถอนทุน และถาม Buddy พร้อมแนบรูปกราฟได้
 
 ### คำเตือนสำคัญ
 
@@ -113,12 +113,16 @@ Trade Buddy War Room เป็นผู้ช่วยด้านการศ�
 
 ### ฟีเจอร์
 
-- หน้าหลัก War Room แบบเน้นแชท
+- หน้า War Room แบบเน้นแชท
 - Agent status bar
 - Market Dashboard
-- ข้อมูลตลาดสาธารณะ BTCUSDT / ETHUSDT / SOLUSDT
+- Watchlist เหรียญ Binance USDT
+- กราฟราคาขนาดเล็กจากข้อมูล public candle
 - EMA20 / EMA50 / RSI14
 - สถานะตลาดแบบ rule-based
+- ตัวช่วยดูฝั่งที่น่าจับตา
+- บันทึกฝาก / ถอน เพื่อคำนวณทุน
+- แสดง USD เป็นหลัก และมี THB ในวงเล็บเป็นตัวช่วย
 - Risk Calculator
 - Setup Checklist
 - Trade Journal
@@ -129,6 +133,15 @@ Trade Buddy War Room เป็นผู้ช่วยด้านการศ�
 - Multi-Agent Discussion + Exit Plan Alert
 - Bottom navigation สำหรับมือถือ
 - โครงสร้างพร้อมต่อ AI API ในอนาคต
+
+### วิธีใช้งานทุนและสกุลเงิน
+
+- เพิ่มรายการฝากเมื่อเติมทุน
+- เพิ่มรายการถอนเมื่อนำทุนออก
+- ยอดทุนรวมจะคำนวณจากฝากลบถอน
+- ระบบใช้ USD เป็นหลัก
+- ค่าเงินบาทในวงเล็บเป็นค่าประมาณเพื่อช่วยเทียบภาพรวม
+- การคุมความเสี่ยงควรดูเป็น 1-2% ของทุนปัจจุบัน
 
 ### วิธีติดตั้ง
 
@@ -151,11 +164,12 @@ npm run build
 ### คู่มือใช้งานสั้น ๆ
 
 1. เปิด War Room แล้วเริ่มที่แชท Buddy
-2. ดู Market Dashboard เพื่อเช็ก BTC / ETH / SOL
-3. ใช้ Risk Calculator กรอก Entry, Stop Loss, Take Profit
-4. เช็ก Setup Checklist ก่อนตัดสินใจ
-5. บันทึกผลใน Trade Journal ทุกครั้ง
-6. ถ้าวันนี้ขาดทุนถึง -20 บาท หรือแพ้ติดกัน 2 ไม้ ให้พักก่อน
+2. เพิ่มรายการฝาก/ถอนเพื่อให้ระบบรู้ทุนปัจจุบัน
+3. ดู Market Dashboard เพื่อเช็กเหรียญใน watchlist
+4. ใช้ Risk Calculator กรอก Entry, Stop Loss, Take Profit
+5. เช็ก Setup Checklist ก่อนทำตามแผน
+6. บันทึกผลใน Trade Journal หลังจบไม้
+7. ถ้าวันนี้แตะ Daily Stop หรือแพ้ติดกัน 2 ไม้ ให้พักก่อน
 
 ### หมายเหตุเรื่อง AI ในอนาคต
 

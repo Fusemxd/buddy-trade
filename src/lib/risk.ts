@@ -1,5 +1,5 @@
-export const DEFAULT_CAPITAL_THB = 500;
-export const DAILY_LOSS_LIMIT_THB = -20;
+export const DEFAULT_CAPITAL_THB = 20;
+export const DAILY_LOSS_LIMIT_THB = -0.6;
 
 export type RiskInput = {
   capitalThb: number;
@@ -38,7 +38,7 @@ export function calculateRisk(input: RiskInput): RiskResult {
   const losingStreak = input.losingStreak ?? 0;
   const hasStopLoss = input.stopLoss > 0 && riskDistance > 0;
   const isRewardValid = rewardMultiple >= 2;
-  const isRiskAmountValid = !(input.capitalThb === DEFAULT_CAPITAL_THB && riskAmountThb > 10);
+  const isRiskAmountValid = riskAmountThb <= input.capitalThb * 0.02;
   const dailyStopClear = dailyPnlThb > DAILY_LOSS_LIMIT_THB;
   const primaryMessage = isRewardValid ? "Initial risk/reward condition passed." : "Risk/reward is below the minimum condition.";
 

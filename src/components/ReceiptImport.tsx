@@ -25,7 +25,7 @@ export default function ReceiptImport({ onSaved }: { onSaved?: () => void }) {
 
   function save(category?: ExtractedReceiptData["category"]) {
     const expenses = loadExpenses();
-    saveExpenses([{ id: crypto.randomUUID(), createdAt: new Date().toISOString(), merchant: data.merchant ?? "Unknown", date: data.date || new Date().toISOString().slice(0, 10), totalAmount: data.totalAmount ?? 0, currency: data.currency ?? "THB", category: category ?? data.category ?? "Other", source: data.source ?? "Receipt Photo", imageDataUrl, rawText, notes: data.notes, confirmed: true }, ...expenses]);
+    saveExpenses([{ id: crypto.randomUUID(), createdAt: new Date().toISOString(), merchant: data.merchant ?? "Unknown", date: data.date || new Date().toISOString().slice(0, 10), totalAmount: data.totalAmount ?? 0, currency: data.currency ?? "USD", category: category ?? data.category ?? "Other", source: data.source ?? "Receipt Photo", imageDataUrl, rawText, notes: data.notes, confirmed: true }, ...expenses]);
     setSavedMessage("บันทึกค่าใช้จ่ายแล้ว");
     onSaved?.();
   }

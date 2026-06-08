@@ -1,3 +1,4 @@
+import CapitalLedger from "./CapitalLedger";
 import type { MobileWarRoomPanel } from "./MobileBottomNav";
 
 const navItems: Array<{ id: MobileWarRoomPanel; label: string }> = [
@@ -35,17 +36,13 @@ export default function SidebarNav({ activePanel, onSelect }: { activePanel: Mob
       </nav>
 
       <div className="mt-6 space-y-3">
-        <div className="rounded-3xl border border-slate-700/70 bg-slate-900/70 p-4">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">ทุนปัจจุบัน</p>
-          <p className="mt-2 text-2xl font-black text-white">500.00 THB</p>
-          <p className="mt-1 text-sm font-semibold text-slate-400">PnL วันนี้: 0.00 THB</p>
-        </div>
+        <CapitalLedger compact />
         <div className="rounded-3xl border border-red-300/25 bg-red-300/10 p-4">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-red-100">Daily Stop -20.00 THB</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-red-100">Daily Stop -$0.60 <span className="text-red-100/60">(-21 THB)</span></p>
           <div className="mt-3 h-3 overflow-hidden rounded-full bg-slate-800">
             <div className="h-full w-0 rounded-full bg-red-300" />
           </div>
-          <p className="mt-2 text-xs font-semibold text-slate-400">Used amount: 0.00 THB</p>
+          <p className="mt-2 text-xs font-semibold text-slate-400">Used amount: $0.00 <span className="text-slate-500">(0 THB)</span></p>
         </div>
         <div className="rounded-3xl border border-yellow-300/25 bg-yellow-300/10 p-4">
           <p className="text-sm font-black text-yellow-100">Buddy Tip</p>

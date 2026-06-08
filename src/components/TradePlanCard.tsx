@@ -22,7 +22,7 @@ export default function TradePlanCard({ plan }: { plan: TradePlan }) {
         <Mini label="Stop Loss" value={String(plan.stopLoss)} />
         <Mini label="TP1" value={String(plan.takeProfit1)} />
         <Mini label="TP2" value={plan.takeProfit2 ? String(plan.takeProfit2) : "-"} />
-        <Mini label="Risk Amount" value={`${plan.riskAmount} THB`} />
+        <Mini label="Risk Amount" value={`$${plan.riskAmount}`} />
         <Mini label="Position Size" value={String(plan.positionSize)} />
         <Mini label="R:R TP1" value={`1:${plan.rewardRiskToTp1}`} />
         <Mini label="R:R TP2" value={plan.rewardRiskToTp2 ? `1:${plan.rewardRiskToTp2}` : "-"} />
