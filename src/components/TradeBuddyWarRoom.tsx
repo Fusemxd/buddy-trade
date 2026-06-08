@@ -31,23 +31,23 @@ export default function TradeBuddyWarRoom() {
   }
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-slate-950 pb-20 text-slate-100 lg:pb-0">
+    <main className="min-h-screen overflow-x-hidden bg-slate-950 pb-28 text-slate-100 lg:pb-0">
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.22),transparent_32%),radial-gradient(circle_at_top_right,rgba(34,211,238,0.14),transparent_28%),linear-gradient(180deg,#020617,#0f172a_58%,#020617)]" />
       <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(148,163,184,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.04)_1px,transparent_1px)] bg-[size:36px_36px]" />
 
       <div className="relative flex min-h-screen">
         <SidebarNav activePanel={page} onSelect={setPage} />
         <div className="min-w-0 flex-1">
-          <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-4 px-3 py-4 sm:px-5 xl:px-6">
+          <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-4 px-3 pb-6 pt-4 sm:px-5 lg:pb-4 xl:px-6">
             <TopBar />
             <header className="rounded-3xl border border-slate-700/70 bg-slate-950/60 p-4 shadow-[0_0_60px_rgba(34,211,238,0.1)] backdrop-blur">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-200">Semi-Auto Trading Helper</p>
-                  <h1 className="mt-2 text-3xl font-black text-white sm:text-5xl">Trade Buddy War Room</h1>
+                  <h1 className="mt-2 break-words text-3xl font-black text-white sm:text-5xl">Trade Buddy War Room</h1>
                   <p className="mt-2 text-sm font-semibold text-slate-300">{pageTitle(page)}</p>
                 </div>
-                <div className="max-w-xl rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-3 text-sm font-semibold text-yellow-100">{DISCLAIMER_TEXT}</div>
+                <div className="max-w-xl rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-3 text-sm font-semibold leading-relaxed text-yellow-100">{DISCLAIMER_TEXT}</div>
               </div>
             </header>
 
@@ -69,9 +69,9 @@ export default function TradeBuddyWarRoom() {
 function renderPage(page: MobileWarRoomPanel, props: { risk?: RiskResult; onRiskChange: (risk: RiskResult) => void; onNavigate: (page: MobileWarRoomPanel) => void; onBuildPlan: (symbol?: string) => void; planSymbol: string }) {
   if (page === "dashboard") {
     return (
-      <div className="grid gap-4 xl:grid-cols-[1fr_0.8fr]">
+      <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)]">
         <DashboardOverview onNavigate={(next) => props.onNavigate(next)} />
-        <div className="grid content-start gap-4">
+        <div className="grid min-w-0 content-start gap-4">
           <BuddyHeroCard />
           <TradeBuddyChat context={{ riskWarnings: props.risk?.warnings ?? [] }} />
         </div>
@@ -81,9 +81,9 @@ function renderPage(page: MobileWarRoomPanel, props: { risk?: RiskResult; onRisk
   if (page === "scanner") return <WatchlistScanner onBuildPlan={props.onBuildPlan} />;
   if (page === "plan") {
     return (
-      <div className="grid gap-4 xl:grid-cols-[1fr_0.85fr]">
+      <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.85fr)]">
         <TradePlanBuilder initialSymbol={props.planSymbol} />
-        <div className="grid content-start gap-4">
+        <div className="grid min-w-0 content-start gap-4">
           <DirectionBiasCard initialInput={{ symbol: props.planSymbol }} />
           <RiskCalculator onRiskChange={props.onRiskChange} />
           <SetupChecklist risk={props.risk} />
