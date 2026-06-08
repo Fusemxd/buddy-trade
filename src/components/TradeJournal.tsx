@@ -2,54 +2,65 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { loadJournal, saveJournal } from "@/lib/journal";
-import type { JournalEntry, TradeDirection, TradeResult } from "@/types/journal";
+import { loadWatchlist } from "@/lib/watchlistStorage";
+import type { JournalEntry } from "@/types/journal";
 import JournalDashboard from "./JournalDashboard";
 import JournalSummary from "./JournalSummary";
 
-type JournalForm = Omit<JournalEntry, "id" | "createdAt">;
+type QuickJournalForm = {
+  symbol: string;
+  entry: string;
+  amountThb: string;
+  profitLossThb: string;
+  durationMinutes: string;
+};
 
-const today = () => new Date().toISOString().slice(0, 10);
-
-const emptyForm = (): JournalForm => ({
-  date: today(),
+const emptyForm = (): QuickJournalForm => ({
   symbol: "BTCUSDT",
-  direction: "Spot Buy",
   entry: "",
-  stopLoss: "",
-  takeProfit: "",
-  result: "Break Even",
+  amountThb: "",
   profitLossThb: "",
-  emotion: "",
-  reasonForEntry: "",
-  notes: "",
-  strategy: "",
-  mistakeTags: "",
-  tradeDuration: "",
-  followedPlan: "yes"
+  durationMinutes: ""
 });
-
-const directions: TradeDirection[] = ["Spot Buy", "Long", "Short"];
-const results: TradeResult[] = ["Win", "Loss", "Break Even"];
 
 export default function TradeJournal() {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
-  const [form, setForm] = useState<JournalForm>(emptyForm);
+  const [symbols, setSymbols] = useState(["BTCUSDT", "ETHUSDT", "SOLUSDT"]);
+  const [form, setForm] = useState<QuickJournalForm>(emptyForm);
 
   useEffect(() => {
+    const watchlistSymbols = loadWatchlist().map((item) => item.symbol);
+    setSymbols(watchlistSymbols.length ? watchlistSymbols : ["BTCUSDT", "ETHUSDT", "SOLUSDT"]);
+    setForm((current) => ({ ...current, symbol: watchlistSymbols[0] ?? current.symbol }));
     setEntries(loadJournal());
   }, []);
 
   function submit(event: FormEvent) {
     event.preventDefault();
+    const pnl = Number(form.profitLossThb || 0);
     const nextEntry: JournalEntry = {
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
-      ...form
+      date: new Date().toISOString().slice(0, 10),
+      symbol: form.symbol,
+      direction: "Spot Buy",
+      entry: form.entry,
+      stopLoss: "",
+      takeProfit: "",
+      result: pnl > 0 ? "Win" : pnl < 0 ? "Loss" : "Break Even",
+      profitLossThb: form.profitLossThb || "0",
+      emotion: "",
+      reasonForEntry: "",
+      notes: `เล่น ${form.amountThb || "0"} บาท | ระยะเวลา ${form.durationMinutes || "0"} นาที`,
+      strategy: "Quick Journal",
+      mistakeTags: "",
+      tradeDuration: form.durationMinutes ? `${form.durationMinutes} นาที` : "",
+      followedPlan: "yes"
     };
     const nextEntries = [nextEntry, ...entries];
     setEntries(nextEntries);
     saveJournal(nextEntries);
-    setForm({ ...emptyForm(), symbol: form.symbol, direction: form.direction });
+    setForm({ ...emptyForm(), symbol: form.symbol });
   }
 
   function clear() {
@@ -62,9 +73,10 @@ export default function TradeJournal() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.2em] text-purple-200">Trade Journal</p>
-          <h2 className="mt-1 text-xl font-black text-white">Daily Stop Record</h2>
+          <h2 className="mt-1 text-xl font-black text-white">จดสั้น ๆ พอใช้งานจริง</h2>
+          <p className="mt-1 text-sm font-semibold text-slate-400">กรอกแค่เหรียญ ราคาเข้า เงินที่เล่น ได้/เสีย และเวลาก็พอ ระบบจะสรุปให้เอง</p>
         </div>
-        <button className="rounded-lg border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300" onClick={clear}>Clear journal</button>
+        <button className="rounded-lg border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300" onClick={clear} type="button">Clear journal</button>
       </div>
 
       <div className="mt-4">
@@ -74,44 +86,36 @@ export default function TradeJournal() {
         <JournalDashboard entries={entries} />
       </div>
 
-      <form className="mt-5 grid gap-3 lg:grid-cols-3" onSubmit={submit}>
-        <InputField label="Date" type="date" value={form.date} onChange={(value) => setForm((current) => ({ ...current, date: value }))} />
-        <InputField label="Symbol" value={form.symbol} onChange={(value) => setForm((current) => ({ ...current, symbol: value.toUpperCase() }))} />
-        <SelectField label="Direction" value={form.direction} options={directions} onChange={(value) => setForm((current) => ({ ...current, direction: value as TradeDirection }))} />
-        <InputField label="Entry" value={form.entry} onChange={(value) => setForm((current) => ({ ...current, entry: value }))} />
-        <InputField label="Stop Loss" value={form.stopLoss} onChange={(value) => setForm((current) => ({ ...current, stopLoss: value }))} />
-        <InputField label="Take Profit" value={form.takeProfit} onChange={(value) => setForm((current) => ({ ...current, takeProfit: value }))} />
-        <SelectField label="Result" value={form.result} options={results} onChange={(value) => setForm((current) => ({ ...current, result: value as TradeResult }))} />
-        <InputField label="Profit or Loss in THB" type="number" value={form.profitLossThb} onChange={(value) => setForm((current) => ({ ...current, profitLossThb: value }))} />
-        <InputField label="Emotion" value={form.emotion} onChange={(value) => setForm((current) => ({ ...current, emotion: value }))} />
-        <InputField label="Strategy" value={form.strategy ?? ""} onChange={(value) => setForm((current) => ({ ...current, strategy: value }))} />
-        <InputField label="Mistake tags" value={form.mistakeTags ?? ""} onChange={(value) => setForm((current) => ({ ...current, mistakeTags: value }))} />
-        <InputField label="Trade duration" value={form.tradeDuration ?? ""} onChange={(value) => setForm((current) => ({ ...current, tradeDuration: value }))} />
-        <SelectField label="Followed plan" value={form.followedPlan ?? "yes"} options={["yes", "no"]} onChange={(value) => setForm((current) => ({ ...current, followedPlan: value as "yes" | "no" }))} />
-        <TextAreaField label="Reason for entry" value={form.reasonForEntry} onChange={(value) => setForm((current) => ({ ...current, reasonForEntry: value }))} />
-        <TextAreaField label="Notes" value={form.notes} onChange={(value) => setForm((current) => ({ ...current, notes: value }))} />
-        <button className="min-h-14 rounded-xl bg-purple-300 px-4 py-3 text-base font-black text-slate-950 lg:col-span-3">Save journal entry</button>
+      <form className="mt-5 grid gap-3 rounded-3xl border border-purple-300/20 bg-purple-300/5 p-3 sm:grid-cols-2 xl:grid-cols-5" onSubmit={submit}>
+        <label className="text-sm font-black text-slate-200">
+          ชื่อเหรียญ
+          <select className="mt-2 min-h-14 w-full rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-base font-bold text-white outline-none focus:border-purple-300" value={form.symbol} onChange={(event) => setForm((current) => ({ ...current, symbol: event.target.value }))}>
+            {symbols.map((symbol) => <option key={symbol}>{symbol}</option>)}
+          </select>
+        </label>
+        <InputField label="เข้าที่ราคาเท่าไหร่" type="number" value={form.entry} onChange={(value) => setForm((current) => ({ ...current, entry: value }))} />
+        <InputField label="เล่นกี่บาท" type="number" value={form.amountThb} onChange={(value) => setForm((current) => ({ ...current, amountThb: value }))} />
+        <InputField label="ได้/เสียกี่บาท" type="number" value={form.profitLossThb} onChange={(value) => setForm((current) => ({ ...current, profitLossThb: value }))} />
+        <InputField label="เล่นกี่นาที" type="number" value={form.durationMinutes} onChange={(value) => setForm((current) => ({ ...current, durationMinutes: value }))} />
+        <button className="min-h-14 rounded-xl bg-purple-300 px-4 py-3 text-base font-black text-slate-950 sm:col-span-2 xl:col-span-5">บันทึกไม้</button>
       </form>
 
       <div className="mt-5 grid gap-3">
-        {entries.length === 0 ? <p className="rounded-xl border border-slate-700 bg-slate-900/75 p-4 text-sm font-semibold text-slate-400">No journal entries yet. Save the first trade note to activate daily stop tracking.</p> : null}
+        {entries.length === 0 ? <p className="rounded-xl border border-slate-700 bg-slate-900/75 p-4 text-sm font-semibold text-slate-400">ยังไม่มีบันทึก เริ่มจดไม้แรกเพื่อดูนิสัยการเทรดของตัวเอง</p> : null}
         {entries.map((entry) => (
           <article className="rounded-xl border border-slate-700 bg-slate-900/75 p-4 text-sm text-slate-300" key={entry.id}>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <p className="text-lg font-black text-white">{entry.symbol} - {entry.direction}</p>
+                <p className="text-lg font-black text-white">{entry.symbol}</p>
                 <p className="text-xs font-semibold text-slate-500">{entry.date} | {formatIsoDateTime(entry.createdAt)}</p>
               </div>
               <span className={`rounded-full px-3 py-1 text-xs font-black ${entry.result === "Win" ? "bg-emerald-400/10 text-emerald-100" : entry.result === "Loss" ? "bg-red-400/10 text-red-100" : "bg-slate-700 text-slate-200"}`}>{entry.result} | {entry.profitLossThb || "0"} THB</span>
             </div>
             <div className="mt-3 grid gap-2 sm:grid-cols-3">
-              <MiniStat label="Entry" value={entry.entry || "-"} />
-              <MiniStat label="SL" value={entry.stopLoss || "-"} />
-              <MiniStat label="TP" value={entry.takeProfit || "-"} />
+              <MiniStat label="เข้า" value={entry.entry || "-"} />
+              <MiniStat label="เวลา" value={entry.tradeDuration || "-"} />
+              <MiniStat label="รายละเอียด" value={entry.notes || "-"} />
             </div>
-            <p className="mt-3"><span className="font-bold text-white">Emotion:</span> {entry.emotion || "-"}</p>
-            <p className="mt-1"><span className="font-bold text-white">Reason:</span> {entry.reasonForEntry || "-"}</p>
-            <p className="mt-1"><span className="font-bold text-white">Notes:</span> {entry.notes || "-"}</p>
           </article>
         ))}
       </div>
@@ -133,33 +137,11 @@ function InputField({ label, value, onChange, type = "text" }: { label: string; 
   );
 }
 
-function SelectField({ label, value, options, onChange }: { label: string; value: string; options: string[]; onChange: (value: string) => void }) {
-  return (
-    <label className="text-sm font-black text-slate-200">
-      {label}
-      <select className="mt-2 min-h-14 w-full rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-base font-bold text-white outline-none focus:border-purple-300" value={value} onChange={(event) => onChange(event.target.value)}>
-        {options.map((option) => (
-          <option key={option}>{option}</option>
-        ))}
-      </select>
-    </label>
-  );
-}
-
-function TextAreaField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
-  return (
-    <label className="text-sm font-black text-slate-200 lg:col-span-3">
-      {label}
-      <textarea className="mt-2 min-h-24 w-full rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-base font-bold text-white outline-none focus:border-purple-300" value={value} onChange={(event) => onChange(event.target.value)} />
-    </label>
-  );
-}
-
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-slate-700 bg-slate-950/70 p-3">
       <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{label}</p>
-      <p className="mt-1 font-black text-white">{value}</p>
+      <p className="mt-1 break-words font-black text-white">{value}</p>
     </div>
   );
 }
