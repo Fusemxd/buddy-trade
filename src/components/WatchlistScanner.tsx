@@ -1,0 +1,161 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { analyzeKlines } from "@/lib/indicators";
+import { fetchMarketData } from "@/lib/marketDataProviders";
+import { buildWatchlistSetup } from "@/lib/setupScanner";
+import { loadWatchlist, saveWatchlist } from "@/lib/watchlistStorage";
+import type { Kline, MarketSignal } from "@/types/market";
+import type { WatchlistSetup } from "@/types/setup";
+import type { WatchlistItem } from "@/types/watchlist";
+import DataSourceBadge from "./DataSourceBadge";
+import WatchlistCard from "./WatchlistCard";
+import WatchlistManager from "./WatchlistManager";
+
+const DEFAULT_TIMEFRAME = "15m";
+
+export default function WatchlistScanner({ onBuildPlan }: { onBuildPlan?: (symbol: string) => void }) {
+  const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
+  const [items, setItems] = useState<WatchlistSetup[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME);
+  const [failedSymbol, setFailedSymbol] = useState("");
+
+  const scan = useCallback(
+    async (forceRefresh = false, symbols?: string[]) => {
+      const sourceItems = loadWatchlist();
+      const scanSymbols = symbols ?? sourceItems.map((item) => item.symbol);
+      setWatchlist(sourceItems);
+      setLoading(true);
+      setError("");
+      setFailedSymbol("");
+      try {
+        const markets = await Promise.all(scanSymbols.map((symbol) => loadMarketSignal(symbol, timeframe, forceRefresh)));
+        const validMarkets = markets.filter((market): market is MarketSignal => Boolean(market));
+        setItems(validMarkets.map(buildWatchlistSetup));
+        if (validMarkets.length !== scanSymbols.length) {
+          setError("ดึงข้อมูลจาก Binance ไม่ได้ชั่วคราว สามารถกรอกราคาเองเพื่อคำนวณ Risk ได้");
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "ดึงข้อมูลจาก Binance ไม่ได้ชั่วคราว สามารถกรอกราคาเองเพื่อคำนวณ Risk ได้");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [timeframe]
+  );
+
+  const handleWatchlistChange = useCallback((nextItems: WatchlistItem[]) => {
+    setWatchlist(nextItems);
+  }, []);
+
+  useEffect(() => {
+    const loaded = loadWatchlist();
+    setWatchlist(loaded);
+    void scan(false, loaded.map((item) => item.symbol));
+  }, [scan]);
+
+  function removeSymbol(symbol: string) {
+    const next = watchlist.filter((item) => item.symbol !== symbol);
+    saveWatchlist(next);
+    setWatchlist(next);
+    setItems((current) => current.filter((item) => item.symbol !== symbol));
+  }
+
+  return (
+    <section className="rounded-3xl border border-slate-700/70 bg-slate-950/65 p-4 shadow-[0_0_45px_rgba(34,211,238,0.08)]">
+      <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-cyan-200">Custom Crypto Watchlist</p>
+          <h2 className="mt-1 text-xl font-black text-white">Semi-Auto Setup Scan</h2>
+          <p className="mt-1 max-w-3xl text-sm text-slate-400">เพิ่มเหรียญที่ต้องการเฝ้าดู เช่น BTCUSDT, ETHUSDT, SOLUSDT ข้อมูลนี้ใช้เพื่อช่วยวางแผน ไม่ใช่คำสั่งซื้อขาย</p>
+        </div>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <select className="min-h-12 rounded-2xl border border-slate-700 bg-slate-900 px-3 text-sm font-black text-white" value={timeframe} onChange={(event) => setTimeframe(event.target.value)}>
+            <option value="5m">5m</option>
+            <option value="15m">15m</option>
+            <option value="1h">1h</option>
+            <option value="4h">4h</option>
+            <option value="1d">1d</option>
+          </select>
+          <button className="min-h-12 rounded-2xl bg-cyan-300 px-4 text-sm font-black text-slate-950 disabled:opacity-60" disabled={loading} onClick={() => scan(true)} type="button">
+            {loading ? "Scanning..." : "รีเฟรชข้อมูล"}
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-4 xl:grid-cols-[0.9fr_1.4fr]">
+        <div className="grid content-start gap-3">
+          <DataSourceBadge />
+          <WatchlistManager onChange={handleWatchlistChange} />
+        </div>
+        <div className="min-w-0">
+          {error ? <p className="mb-4 rounded-2xl border border-red-300/35 bg-red-300/10 p-3 text-sm font-bold text-red-100">{error}</p> : null}
+          {failedSymbol ? <ManualFallback symbol={failedSymbol} onBuildPlan={onBuildPlan} /> : null}
+          <div className="grid gap-3 xl:grid-cols-2">
+            {loading && !items.length
+              ? watchlist.map((item) => <div className="min-h-72 animate-pulse rounded-3xl border border-slate-700 bg-slate-900/70" key={item.id} />)
+              : items.map((item) => (
+                  <WatchlistCard
+                    key={item.symbol}
+                    setup={item}
+                    onBuildPlan={onBuildPlan}
+                    onRefresh={(symbol) => scan(true, [symbol])}
+                    onRemove={(symbol) => removeSymbol(symbol)}
+                    onFallback={(symbol) => setFailedSymbol(symbol)}
+                  />
+                ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+async function loadMarketSignal(symbol: string, timeframe: string, forceRefresh: boolean): Promise<MarketSignal | null> {
+  const result = await fetchMarketData(symbol, timeframe, { forceRefresh });
+  if (result.error || !result.candles?.length) return null;
+  const candles: Kline[] = result.candles.map((candle) => ({
+    openTime: Number(candle.time),
+    open: candle.open,
+    high: candle.high,
+    low: candle.low,
+    close: candle.close,
+    volume: candle.volume ?? 0,
+    closeTime: Number(candle.time)
+  }));
+  const signal = analyzeKlines(symbol, timeframe, candles);
+  return {
+    ...signal,
+    provider: "binance",
+    changePercent: result.quote?.changePercent,
+    cached: result.stale,
+    updatedAt: result.quote?.timestamp ?? new Date().toISOString(),
+    recentCloses: candles.slice(-48).map((candle) => candle.close)
+  };
+}
+
+function ManualFallback({ symbol, onBuildPlan }: { symbol: string; onBuildPlan?: (symbol: string) => void }) {
+  return (
+    <div className="mb-4 rounded-3xl border border-yellow-300/35 bg-yellow-300/10 p-4 text-yellow-50">
+      <h3 className="text-lg font-black">Manual fallback: {symbol}</h3>
+      <p className="mt-1 text-sm font-semibold">ถ้าดึงข้อมูลไม่ได้ ให้กรอกราคาเองเพื่อเช็ก Risk ต่อได้</p>
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        {["Current price", "Entry", "Stop Loss", "Take Profit"].map((label) => (
+          <label className="text-xs font-black" key={label}>
+            {label}
+            <input className="mt-1 min-h-11 w-full rounded-xl border border-yellow-200/30 bg-slate-950 px-3 text-white" type="number" />
+          </label>
+        ))}
+        <label className="text-xs font-black sm:col-span-2">
+          Notes
+          <textarea className="mt-1 min-h-20 w-full rounded-xl border border-yellow-200/30 bg-slate-950 px-3 py-2 text-white" />
+        </label>
+      </div>
+      <button className="mt-3 min-h-11 rounded-xl bg-yellow-300 px-4 font-black text-slate-950" onClick={() => onBuildPlan?.(symbol)} type="button">
+        ส่งไปสร้างแผน
+      </button>
+    </div>
+  );
+}
