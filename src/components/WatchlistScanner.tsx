@@ -16,6 +16,8 @@ import WatchlistCard from "./WatchlistCard";
 import WatchlistManager from "./WatchlistManager";
 
 const DEFAULT_TIMEFRAME = "15m";
+const AUTO_REFRESH_MS = 60_000;
+const DATA_ERROR = "ดึงข้อมูลจาก Binance ไม่ได้ชั่วคราว สามารถกรอกราคาเองเพื่อคำนวณ Risk ได้";
 
 export default function WatchlistScanner({ onBuildPlan }: { onBuildPlan?: (symbol: string) => void }) {
   const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
@@ -39,10 +41,10 @@ export default function WatchlistScanner({ onBuildPlan }: { onBuildPlan?: (symbo
         setItems(validMarkets.map(buildWatchlistSetup));
         evaluateScannerAlerts(validMarkets);
         if (validMarkets.length !== scanSymbols.length) {
-          setError("ดึงข้อมูลจาก Binance ไม่ได้ชั่วคราว สามารถกรอกราคาเองเพื่อคำนวณ Risk ได้");
+          setError(DATA_ERROR);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "ดึงข้อมูลจาก Binance ไม่ได้ชั่วคราว สามารถกรอกราคาเองเพื่อคำนวณ Risk ได้");
+        setError(err instanceof Error ? err.message : DATA_ERROR);
       } finally {
         setLoading(false);
       }
@@ -60,6 +62,13 @@ export default function WatchlistScanner({ onBuildPlan }: { onBuildPlan?: (symbo
     void scan(false, loaded.map((item) => item.symbol));
   }, [scan]);
 
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      void scan(true);
+    }, AUTO_REFRESH_MS);
+    return () => window.clearInterval(timer);
+  }, [scan]);
+
   function removeSymbol(symbol: string) {
     const next = watchlist.filter((item) => item.symbol !== symbol);
     saveWatchlist(next);
@@ -74,6 +83,7 @@ export default function WatchlistScanner({ onBuildPlan }: { onBuildPlan?: (symbo
           <p className="text-xs font-black uppercase tracking-[0.2em] text-cyan-200">Custom Crypto Watchlist</p>
           <h2 className="mt-1 text-xl font-black text-white">Semi-Auto Setup Scan</h2>
           <p className="mt-1 max-w-3xl text-sm text-slate-400">เพิ่มเหรียญที่ต้องการเฝ้าดู เช่น BTCUSDT, ETHUSDT, SOLUSDT ข้อมูลนี้ใช้เพื่อช่วยวางแผน ไม่ใช่คำสั่งซื้อขาย</p>
+          <p className="mt-2 text-xs font-bold text-cyan-100/80">รีเฟรชอัตโนมัติทุก 60 วินาที และกด Refresh เพื่อดึงข้อมูลใหม่ทันทีได้</p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row">
           <select className="min-h-12 rounded-2xl border border-slate-700 bg-slate-900 px-3 text-sm font-black text-white" value={timeframe} onChange={(event) => setTimeframe(event.target.value)}>

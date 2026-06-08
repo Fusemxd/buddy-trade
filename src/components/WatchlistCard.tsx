@@ -12,7 +12,7 @@ const statusClass = {
 const statusDescription = {
   WATCH_LONG: "แนวโน้มเริ่มดูดี แต่ยังต้องรอจุดเข้าและตั้ง Stop Loss ก่อน",
   NO_CHASE: "ราคาอาจร้อนเกินไป รอให้ย่อลงมาก่อนปลอดภัยกว่า",
-  WEAK: "ฝั่งขึ้นยังไม่ชัด ควรรอก่อน ไม่ต้องรีบเข้า",
+  WEAK: "ฝั่งขึ้นยังไม่ชัด ควรรอก่อน ไม่ต้องรีบ",
   WAIT: "ข้อมูลยังไม่ชัดพอ รอ setup ที่ดีกว่านี้"
 };
 
@@ -83,7 +83,7 @@ export default function WatchlistCard({
 
       <p className="mt-3 rounded-2xl border border-white/10 bg-black/20 p-3 text-sm font-bold text-slate-100">{statusDescription[setup.marketStatus]}</p>
       <p className="mt-3 text-sm font-bold text-slate-200">Next step: {setup.nextStep}</p>
-      <p className="mt-2 text-xs font-semibold text-slate-400">{setup.cached ? "ข้อมูลล่าสุดเมื่อ " : "อัปเดตเมื่อ "}{formatTime(setup.updatedAt)}</p>
+      <p className="mt-2 text-xs font-semibold text-slate-400">{setup.cached ? "ข้อมูล cache ล่าสุดเมื่อ " : "อัปเดตเมื่อ "}{formatTime(setup.updatedAt)} · auto refresh ทุก 60 วิ</p>
 
       <div className="mt-4 grid grid-cols-2 gap-2">
         <button className="min-h-12 rounded-2xl border border-cyan-300/30 bg-cyan-300/10 px-4 text-sm font-black text-cyan-100" onClick={() => onBuildPlan?.(setup.symbol)} type="button">
