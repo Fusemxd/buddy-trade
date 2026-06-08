@@ -1,5 +1,5 @@
+import { formatThbAsUsdWithThb } from "@/lib/capitalStorage";
 import { getDailyStopStatus } from "@/lib/dailyStop";
-import { formatUsdWithThb } from "@/lib/capitalStorage";
 import { summarizeJournal } from "@/lib/journal";
 import type { JournalEntry } from "@/types/journal";
 
@@ -12,9 +12,9 @@ export default function JournalSummary({ entries }: { entries: JournalEntry[] })
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         <SummaryItem label="Total trades" value={summary.totalTrades} />
         <SummaryItem label="Win rate" value={`${summary.winRate}%`} />
-        <SummaryItem label="Total P/L" value={formatUsdWithThb(summary.totalPnl)} tone={summary.totalPnl < 0 ? "danger" : "good"} />
+        <SummaryItem label="Total P/L" value={formatThbAsUsdWithThb(summary.totalPnl)} tone={summary.totalPnl < 0 ? "danger" : "good"} />
         <SummaryItem label="Losing streak" value={summary.currentLosingStreak} tone={summary.currentLosingStreak >= 2 ? "danger" : "neutral"} />
-        <SummaryItem label="Today's P/L" value={formatUsdWithThb(summary.todayPnl)} tone={summary.todayPnl <= -0.6 ? "danger" : "neutral"} />
+        <SummaryItem label="Today's P/L" value={formatThbAsUsdWithThb(summary.todayPnl)} tone={summary.todayPnl <= -20 ? "danger" : "neutral"} />
       </div>
 
       {dailyStop.blocked ? (

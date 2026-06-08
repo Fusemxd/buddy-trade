@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { formatUsdWithThb } from "@/lib/capitalStorage";
+import { formatThbAsUsdWithThb, formatUsdWithThb } from "@/lib/capitalStorage";
 import { loadJournal, saveJournal } from "@/lib/journal";
 import { loadWatchlist } from "@/lib/watchlistStorage";
 import type { JournalEntry } from "@/types/journal";
@@ -11,7 +11,7 @@ import JournalSummary from "./JournalSummary";
 type QuickJournalForm = {
   symbol: string;
   entry: string;
-  amountThb: string;
+  amountUsd: string;
   profitLossThb: string;
   durationMinutes: string;
 };
@@ -19,7 +19,7 @@ type QuickJournalForm = {
 const emptyForm = (): QuickJournalForm => ({
   symbol: "BTCUSDT",
   entry: "",
-  amountThb: "",
+  amountUsd: "",
   profitLossThb: "",
   durationMinutes: ""
 });
@@ -38,7 +38,7 @@ export default function TradeJournal() {
 
   function submit(event: FormEvent) {
     event.preventDefault();
-    const pnl = Number(form.profitLossThb || 0);
+    const pnlThb = Number(form.profitLossThb || 0);
     const nextEntry: JournalEntry = {
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
@@ -48,11 +48,11 @@ export default function TradeJournal() {
       entry: form.entry,
       stopLoss: "",
       takeProfit: "",
-      result: pnl > 0 ? "Win" : pnl < 0 ? "Loss" : "Break Even",
+      result: pnlThb > 0 ? "Win" : pnlThb < 0 ? "Loss" : "Break Even",
       profitLossThb: form.profitLossThb || "0",
       emotion: "",
       reasonForEntry: "",
-      notes: `เล่น ${formatUsdWithThb(Number(form.amountThb || 0))} | ระยะเวลา ${form.durationMinutes || "0"} นาที`,
+      notes: `เล่น ${formatUsdWithThb(Number(form.amountUsd || 0))} | ระยะเวลา ${form.durationMinutes || "0"} นาที`,
       strategy: "Quick Journal",
       mistakeTags: "",
       tradeDuration: form.durationMinutes ? `${form.durationMinutes} นาที` : "",
@@ -75,7 +75,7 @@ export default function TradeJournal() {
         <div>
           <p className="text-xs font-black uppercase tracking-[0.2em] text-purple-200">Trade Journal</p>
           <h2 className="mt-1 text-xl font-black text-white">จดสั้น ๆ พอใช้งานจริง</h2>
-          <p className="mt-1 text-sm font-semibold text-slate-400">กรอกแค่เหรียญ ราคาเข้า เงินที่เล่น ได้/เสีย และเวลาก็พอ ระบบจะสรุปให้เอง</p>
+          <p className="mt-1 text-sm font-semibold text-slate-400">กรอกแค่เหรียญ ราคาเข้า เงินที่เล่น P/L เป็นบาท และเวลา ระบบจะสรุปเป็น USD หลักให้เอง</p>
         </div>
         <button className="rounded-lg border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300" onClick={clear} type="button">Clear journal</button>
       </div>
@@ -95,8 +95,8 @@ export default function TradeJournal() {
           </select>
         </label>
         <InputField label="เข้าที่ราคาเท่าไหร่" type="number" value={form.entry} onChange={(value) => setForm((current) => ({ ...current, entry: value }))} />
-        <InputField label="เล่นกี่ USD" type="number" value={form.amountThb} onChange={(value) => setForm((current) => ({ ...current, amountThb: value }))} />
-        <InputField label="ได้/เสียกี่ USD" type="number" value={form.profitLossThb} onChange={(value) => setForm((current) => ({ ...current, profitLossThb: value }))} />
+        <InputField label="เล่นกี่ USD" type="number" value={form.amountUsd} onChange={(value) => setForm((current) => ({ ...current, amountUsd: value }))} />
+        <InputField label="ได้/เสียกี่บาท" type="number" value={form.profitLossThb} onChange={(value) => setForm((current) => ({ ...current, profitLossThb: value }))} />
         <InputField label="เล่นกี่นาที" type="number" value={form.durationMinutes} onChange={(value) => setForm((current) => ({ ...current, durationMinutes: value }))} />
         <button className="min-h-14 rounded-xl bg-purple-300 px-4 py-3 text-base font-black text-slate-950 sm:col-span-2 xl:col-span-5">บันทึกไม้</button>
       </form>
@@ -110,7 +110,7 @@ export default function TradeJournal() {
                 <p className="text-lg font-black text-white">{entry.symbol}</p>
                 <p className="text-xs font-semibold text-slate-500">{entry.date} | {formatIsoDateTime(entry.createdAt)}</p>
               </div>
-              <span className={`rounded-full px-3 py-1 text-xs font-black ${entry.result === "Win" ? "bg-emerald-400/10 text-emerald-100" : entry.result === "Loss" ? "bg-red-400/10 text-red-100" : "bg-slate-700 text-slate-200"}`}>{entry.result} | {formatUsdWithThb(Number(entry.profitLossThb || 0))}</span>
+              <span className={`rounded-full px-3 py-1 text-xs font-black ${entry.result === "Win" ? "bg-emerald-400/10 text-emerald-100" : entry.result === "Loss" ? "bg-red-400/10 text-red-100" : "bg-slate-700 text-slate-200"}`}>{entry.result} | {formatThbAsUsdWithThb(Number(entry.profitLossThb || 0))}</span>
             </div>
             <div className="mt-3 grid gap-2 sm:grid-cols-3">
               <MiniStat label="เข้า" value={entry.entry || "-"} />

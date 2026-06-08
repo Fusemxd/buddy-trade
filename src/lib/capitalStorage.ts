@@ -1,7 +1,7 @@
 import type { CapitalSummary, CapitalTransaction } from "@/types/capital";
 
 const KEY = "trade-buddy-capital-transactions";
-export const USD_THB_RATE = 35;
+export const USD_THB_RATE = 33;
 
 export function loadCapitalTransactions(): CapitalTransaction[] {
   if (typeof window === "undefined") return [];
@@ -30,7 +30,11 @@ export function summarizeCapital(items: CapitalTransaction[]): CapitalSummary {
 }
 
 export function formatUsdWithThb(valueUsd: number) {
-  return `$${valueUsd.toFixed(2)} (${(valueUsd * USD_THB_RATE).toFixed(0)} THB)`;
+  return `$${valueUsd.toFixed(2)} (${(valueUsd * USD_THB_RATE).toFixed(2)} บาท)`;
+}
+
+export function formatThbAsUsdWithThb(valueThb: number) {
+  return `$${(valueThb / USD_THB_RATE).toFixed(2)} (${valueThb.toFixed(2)} บาท)`;
 }
 
 function sum(items: CapitalTransaction[]) {

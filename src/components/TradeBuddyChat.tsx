@@ -65,7 +65,7 @@ export default function TradeBuddyChat({ context = {} }: { context?: ChatContext
           <div className="mt-4 grid gap-2 sm:grid-cols-3">
             <InfoChip label="Capital" value="ตามฝาก/ถอน" />
             <InfoChip label="Risk per trade" value="1-2%" />
-            <InfoChip label="Daily stop" value="-$0.60 (21 THB)" />
+            <InfoChip label="Daily stop" value="-$0.61 (20.00 บาท)" />
           </div>
         </header>
 

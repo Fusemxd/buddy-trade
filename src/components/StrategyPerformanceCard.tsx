@@ -1,5 +1,5 @@
+import { formatThbAsUsdWithThb } from "@/lib/capitalStorage";
 import type { StrategyPerformance } from "@/types/journalAnalytics";
-import { formatUsdWithThb } from "@/lib/capitalStorage";
 
 export default function StrategyPerformanceCard({ strategies }: { strategies: StrategyPerformance[] }) {
   return (
@@ -11,7 +11,7 @@ export default function StrategyPerformanceCard({ strategies }: { strategies: St
             <p className="font-black text-white">{strategy.strategy}</p>
             <p className="text-sm text-slate-300">Trades {strategy.trades}</p>
             <p className="text-sm text-slate-300">Win {strategy.winRate}%</p>
-            <p className="text-sm font-black text-white">{formatUsdWithThb(strategy.totalPnl)}</p>
+            <p className="text-sm font-black text-white">{formatThbAsUsdWithThb(strategy.totalPnl)}</p>
           </article>
         )) : <p className="text-sm font-bold text-slate-400">ยังไม่มี strategy data</p>}
       </div>

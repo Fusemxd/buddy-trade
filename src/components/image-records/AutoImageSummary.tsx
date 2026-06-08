@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { formatUsdWithThb } from "@/lib/capitalStorage";
+import { formatThbAsUsdWithThb, formatUsdWithThb } from "@/lib/capitalStorage";
 import type { ImageRecordSummary } from "@/types/imageRecord";
 
 export default function AutoImageSummary({ summary }: { summary: ImageRecordSummary }) {
@@ -25,7 +25,7 @@ export default function AutoImageSummary({ summary }: { summary: ImageRecordSumm
         </Panel>
         <Panel title="ผลลัพธ์จาก Journal">
           <MetricRow label="Win / Loss / BE" value={`${summary.winCount ?? 0} / ${summary.lossCount ?? 0} / ${summary.breakEvenCount ?? 0}`} />
-          <MetricRow label="P/L รวม" value={formatUsdWithThb(summary.screenshotLinkedPnL ?? 0)} />
+          <MetricRow label="P/L รวม" value={formatThbAsUsdWithThb(summary.screenshotLinkedPnL ?? 0)} />
         </Panel>
       </div>
       <div className="grid gap-3 md:grid-cols-2">

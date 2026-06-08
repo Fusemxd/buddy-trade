@@ -10,7 +10,7 @@ export default function DailySummaryCard() {
       </div>
       <div className="mt-3 rounded-2xl border border-slate-700/60 bg-slate-950/50 p-3">
         <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500">P/L วันนี้</p>
-        <p className="mt-1 text-2xl font-black text-white">$0.00 <span className="text-sm text-slate-400">(0 THB)</span></p>
+        <p className="mt-1 text-2xl font-black text-white">$0.00 <span className="text-sm text-slate-400">(0.00 บาท)</span></p>
       </div>
     </section>
   );

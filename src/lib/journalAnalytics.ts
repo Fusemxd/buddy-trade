@@ -1,6 +1,7 @@
+import { formatThbAsUsdWithThb } from "@/lib/capitalStorage";
 import { parsePnl, summarizeJournal } from "@/lib/journal";
-import type { JournalAnalytics, StrategyPerformance } from "@/types/journalAnalytics";
 import type { JournalEntry } from "@/types/journal";
+import type { JournalAnalytics, StrategyPerformance } from "@/types/journalAnalytics";
 
 export function analyzeJournal(entries: JournalEntry[]): JournalAnalytics {
   const stats = summarizeJournal(entries);
@@ -22,6 +23,9 @@ export function analyzeJournal(entries: JournalEntry[]): JournalAnalytics {
   if (stats.currentLosingStreak >= 2) insights.push("วันนี้ควรพักเพราะแพ้ติดกัน");
   if (entries.length >= 5 && weeklyEntries.length > 10) insights.push("ควรลดจำนวนไม้ต่อวันและโฟกัสเฉพาะ setup ที่ชัด");
 
+  const weeklyPnl = sumPnl(weeklyEntries);
+  const monthlyPnl = sumPnl(monthlyEntries);
+
   return {
     totalTrades: stats.totalTrades,
     winCount: entries.filter((entry) => entry.result === "Win").length,
@@ -30,8 +34,8 @@ export function analyzeJournal(entries: JournalEntry[]): JournalAnalytics {
     winRate: stats.winRate,
     totalPnl: stats.totalPnl,
     todayPnl: stats.todayPnl,
-    weeklyPnl: sumPnl(weeklyEntries),
-    monthlyPnl: sumPnl(monthlyEntries),
+    weeklyPnl,
+    monthlyPnl,
     averageWin: average(wins),
     averageLoss: average(losses),
     biggestWin: wins.length ? Math.max(...wins) : 0,
@@ -44,8 +48,8 @@ export function analyzeJournal(entries: JournalEntry[]): JournalAnalytics {
     durationSummary: durations.map(({ value, count }) => ({ duration: value, count })),
     strategyPerformance: strategies,
     insights: insights.length ? insights : ["ยังไม่มี insight เชิงลบเด่นชัดจาก Journal"],
-    weeklySummary: `7 วันล่าสุด P/L $${sumPnl(weeklyEntries)} จาก ${weeklyEntries.length} ไม้`,
-    monthlySummary: `เดือนนี้ P/L $${sumPnl(monthlyEntries)} จาก ${monthlyEntries.length} ไม้`
+    weeklySummary: `7 วันล่าสุด P/L ${formatThbAsUsdWithThb(weeklyPnl)} จาก ${weeklyEntries.length} ไม้`,
+    monthlySummary: `เดือนนี้ P/L ${formatThbAsUsdWithThb(monthlyPnl)} จาก ${monthlyEntries.length} ไม้`
   };
 }
 

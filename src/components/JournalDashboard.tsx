@@ -1,5 +1,5 @@
 import { analyzeJournal } from "@/lib/journalAnalytics";
-import { formatUsdWithThb } from "@/lib/capitalStorage";
+import { formatThbAsUsdWithThb } from "@/lib/capitalStorage";
 import type { JournalEntry } from "@/types/journal";
 import JournalStatsCard from "./JournalStatsCard";
 import MonthlyReportCard from "./MonthlyReportCard";
@@ -13,12 +13,12 @@ export default function JournalDashboard({ entries }: { entries: JournalEntry[] 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <JournalStatsCard label="Total trades" value={analytics.totalTrades} helper={`Win ${analytics.winCount} | Loss ${analytics.lossCount} | BE ${analytics.breakEvenCount}`} />
         <JournalStatsCard label="Win rate" value={`${analytics.winRate}%`} helper={`Current losing streak ${analytics.currentLosingStreak}`} />
-        <JournalStatsCard label="Total P/L" value={formatUsdWithThb(analytics.totalPnl)} helper={`Today ${formatUsdWithThb(analytics.todayPnl)}`} />
-        <JournalStatsCard label="Monthly P/L" value={formatUsdWithThb(analytics.monthlyPnl)} helper={`Weekly ${formatUsdWithThb(analytics.weeklyPnl)}`} />
-        <JournalStatsCard label="Average win" value={formatUsdWithThb(analytics.averageWin)} />
-        <JournalStatsCard label="Average loss" value={formatUsdWithThb(analytics.averageLoss)} />
-        <JournalStatsCard label="Biggest win" value={formatUsdWithThb(analytics.biggestWin)} />
-        <JournalStatsCard label="Biggest loss" value={formatUsdWithThb(analytics.biggestLoss)} />
+        <JournalStatsCard label="Total P/L" value={formatThbAsUsdWithThb(analytics.totalPnl)} helper={`Today ${formatThbAsUsdWithThb(analytics.todayPnl)}`} />
+        <JournalStatsCard label="Monthly P/L" value={formatThbAsUsdWithThb(analytics.monthlyPnl)} helper={`Weekly ${formatThbAsUsdWithThb(analytics.weeklyPnl)}`} />
+        <JournalStatsCard label="Average win" value={formatThbAsUsdWithThb(analytics.averageWin)} />
+        <JournalStatsCard label="Average loss" value={formatThbAsUsdWithThb(analytics.averageLoss)} />
+        <JournalStatsCard label="Biggest win" value={formatThbAsUsdWithThb(analytics.biggestWin)} />
+        <JournalStatsCard label="Biggest loss" value={formatThbAsUsdWithThb(analytics.biggestLoss)} />
       </div>
       <div className="grid gap-3 md:grid-cols-2">
         <InsightPanel title="Beginner insights" items={analytics.insights} />
