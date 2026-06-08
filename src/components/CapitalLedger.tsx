@@ -38,10 +38,12 @@ export default function CapitalLedger({ compact = false }: { compact?: boolean }
           <h3 className="mt-1 break-words text-2xl font-black text-white">{formatUsdWithThb(summary.balanceUsd)}</h3>
           <p className="mt-1 text-sm font-semibold leading-relaxed text-emerald-50/80">บันทึกฝาก/ถอนเพื่อคำนวณทุนปัจจุบัน</p>
         </div>
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <Mini label="ฝากรวม" value={formatUsdWithThb(summary.depositsUsd)} />
-          <Mini label="ถอนรวม" value={formatUsdWithThb(summary.withdrawalsUsd)} />
-        </div>
+        {!compact ? (
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <Mini label="ฝากรวม" value={formatUsdWithThb(summary.depositsUsd)} />
+            <Mini label="ถอนรวม" value={formatUsdWithThb(summary.withdrawalsUsd)} />
+          </div>
+        ) : null}
       </div>
 
       {!compact ? (
