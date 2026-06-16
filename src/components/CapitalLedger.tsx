@@ -31,29 +31,28 @@ export default function CapitalLedger({ compact = false }: { compact?: boolean }
   }
 
   return (
-    <section className="min-w-0 rounded-3xl border border-emerald-300/25 bg-emerald-300/10 p-4">
-      <div className="min-w-0">
-        <div className="min-w-0">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-100">Capital Ledger</p>
-          <h3 className="mt-1 text-2xl font-black text-white">{formatUsdWithThb(summary.balanceUsd)}</h3>
-          <p className="mt-1 text-sm font-semibold leading-relaxed text-emerald-50/80">บันทึกฝาก/ถอนเพื่อคำนวณทุนปัจจุบัน</p>
-        </div>
+    <section className="luxury-card min-w-0 overflow-hidden rounded-[2rem] p-4">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_0%,rgba(250,204,21,0.10),transparent_26%),radial-gradient(circle_at_100%_0%,rgba(16,185,129,0.10),transparent_30%)]" />
+      <div className="relative min-w-0">
+        <p className="text-xs font-black uppercase tracking-[0.22em] text-yellow-100">Capital Ledger</p>
+        <h3 className="mt-1 text-2xl font-black text-white">{formatUsdWithThb(summary.balanceUsd)}</h3>
+        <p className="mt-1 text-sm font-semibold leading-relaxed text-slate-300">บันทึกฝาก/ถอนเพื่อคำนวณทุนปัจจุบัน</p>
       </div>
 
       {!compact ? (
-        <>
+        <div className="relative">
           <div className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
             <SummaryLine label="ฝากรวม" value={formatUsdWithThb(summary.depositsUsd)} />
             <SummaryLine label="ถอนรวม" value={formatUsdWithThb(summary.withdrawalsUsd)} />
           </div>
           <form className="mt-4 grid min-w-0 gap-2 sm:grid-cols-2" onSubmit={submit}>
-            <select className="min-h-12 min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-3 font-bold text-white" value={type} onChange={(event) => setType(event.target.value as CapitalTransactionType)}>
+            <select className="min-h-12 min-w-0 rounded-2xl border border-white/10 bg-slate-950/80 px-3 font-bold text-white outline-none focus:border-yellow-200/45" value={type} onChange={(event) => setType(event.target.value as CapitalTransactionType)}>
               <option value="deposit">ฝากทุน</option>
               <option value="withdraw">ถอนทุน</option>
             </select>
-            <input className="min-h-12 min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-3 font-bold text-white" inputMode="decimal" placeholder="จำนวน USD" type="number" value={amountUsd} onChange={(event) => setAmountUsd(event.target.value)} />
-            <input className="min-h-12 min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-3 font-bold text-white sm:col-span-2" placeholder="โน้ต เช่น เติมทุน" value={note} onChange={(event) => setNote(event.target.value)} />
-            <button className="min-h-12 rounded-2xl bg-emerald-300 px-4 font-black text-slate-950 sm:col-span-2" type="submit">บันทึก</button>
+            <input className="min-h-12 min-w-0 rounded-2xl border border-white/10 bg-slate-950/80 px-3 font-bold text-white outline-none placeholder:text-slate-500 focus:border-yellow-200/45" inputMode="decimal" placeholder="จำนวน USD" type="number" value={amountUsd} onChange={(event) => setAmountUsd(event.target.value)} />
+            <input className="min-h-12 min-w-0 rounded-2xl border border-white/10 bg-slate-950/80 px-3 font-bold text-white outline-none placeholder:text-slate-500 focus:border-yellow-200/45 sm:col-span-2" placeholder="โน้ต เช่น เติมทุน" value={note} onChange={(event) => setNote(event.target.value)} />
+            <button className="luxury-primary min-h-12 rounded-2xl px-4 font-black sm:col-span-2" type="submit">บันทึก</button>
           </form>
           <div className="mt-3 grid gap-2">
             {items.slice(0, 5).map((item) => (
@@ -66,7 +65,7 @@ export default function CapitalLedger({ compact = false }: { compact?: boolean }
               </div>
             ))}
           </div>
-        </>
+        </div>
       ) : null}
     </section>
   );
@@ -75,7 +74,7 @@ export default function CapitalLedger({ compact = false }: { compact?: boolean }
 function SummaryLine({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex min-w-0 items-center justify-between gap-3 rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-2">
-      <p className="shrink-0 text-xs font-bold text-emerald-100/70">{label}</p>
+      <p className="shrink-0 text-xs font-bold text-yellow-100/70">{label}</p>
       <p className="truncate text-sm font-black text-white">{value}</p>
     </div>
   );
