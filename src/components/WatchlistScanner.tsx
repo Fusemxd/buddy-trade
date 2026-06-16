@@ -98,14 +98,14 @@ export default function WatchlistScanner({ onBuildPlan }: { onBuildPlan?: (symbo
         </div>
       </div>
 
-      <div className="mt-5 grid gap-4 xl:grid-cols-[0.86fr_1.44fr]">
+      <div className="mt-5 grid gap-4 xl:grid-cols-[0.76fr_1.54fr]">
         <div className="grid content-start gap-3">
           <WatchlistManager onChange={handleWatchlistChange} />
+          {items[0] ? <MultiTimeframePanel symbol={items[0].symbol} /> : null}
         </div>
         <div className="min-w-0">
           {error ? <p className="mb-4 rounded-2xl bg-rose-50 p-3 text-sm font-bold text-rose-700 ring-1 ring-rose-200">{error}</p> : null}
           {failedSymbol ? <ManualFallback symbol={failedSymbol} onBuildPlan={onBuildPlan} /> : null}
-          {items[0] ? <div className="mb-4"><MultiTimeframePanel symbol={items[0].symbol} /></div> : null}
           <div className="grid gap-3 xl:grid-cols-2">
             {loading && !items.length
               ? watchlist.map((item) => <div className="min-h-72 animate-pulse rounded-3xl bg-white/70 shadow-sm ring-1 ring-white" key={item.id} />)

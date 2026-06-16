@@ -28,14 +28,14 @@ export default function MultiTimeframePanel({ symbol }: { symbol: string }) {
   }, [load]);
 
   return (
-    <section className="rounded-2xl bg-white/[0.03] p-4 ring-1 ring-white/[0.055]">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <section className="rounded-2xl bg-white/75 p-3 shadow-sm ring-1 ring-white">
+      <div className="flex flex-col gap-3">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.18em] text-cyan-200">Multi-Timeframe</p>
-          <h3 className="text-xl font-black text-white">{symbol} confirmation</h3>
+          <h3 className="text-lg font-black text-white">{symbol} confirmation</h3>
           <p className="mt-1 text-sm font-semibold text-slate-400">ใช้ 15m + 1h เพื่อดูน้ำหนัก ไม่ใช่คำสั่งซื้อขาย</p>
         </div>
-        <button className="min-h-11 rounded-xl border border-cyan-300/[0.18] bg-cyan-300/[0.08] px-4 text-sm font-black text-cyan-100" onClick={() => load(true)} type="button">{loading ? "Loading..." : "Refresh"}</button>
+        <button className="min-h-10 rounded-xl border border-cyan-300/[0.18] bg-cyan-300/[0.08] px-4 text-sm font-black text-cyan-100" onClick={() => load(true)} type="button">{loading ? "Loading..." : "Refresh"}</button>
       </div>
       {error ? <p className="mt-3 rounded-xl border border-red-300/[0.18] bg-red-300/[0.08] p-3 text-sm font-bold text-red-100">{error}</p> : null}
       {result ? (
@@ -44,7 +44,7 @@ export default function MultiTimeframePanel({ symbol }: { symbol: string }) {
             <p className="text-lg font-black text-white">{result.summaryText}</p>
             <p className="mt-1 text-sm font-bold text-cyan-50/80">Next step: {result.nextStep}</p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-2">
             <TimeframeStatusCard status={result.primary} />
             <TimeframeStatusCard status={result.confirm} />
           </div>
