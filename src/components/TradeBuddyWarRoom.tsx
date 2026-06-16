@@ -31,25 +31,23 @@ export default function TradeBuddyWarRoom() {
   }
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-slate-950 pb-28 text-slate-100 lg:pb-0">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_12%_10%,rgba(234,179,8,0.15),transparent_28%),radial-gradient(circle_at_88%_2%,rgba(34,211,238,0.18),transparent_30%),linear-gradient(135deg,#020617,#07111f_46%,#030712)]" />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:44px_44px]" />
-      <div className="pointer-events-none fixed inset-x-0 top-0 h-64 bg-gradient-to-b from-white/[0.035] to-transparent" />
+    <main className="min-h-screen overflow-x-hidden bg-[#101213] pb-28 text-slate-100 lg:pb-0">
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(31,191,117,0.10),transparent_28%),linear-gradient(180deg,#161819,#0f1112_55%,#0b0d0e)]" />
+      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] bg-[size:40px_40px]" />
 
       <div className="relative flex min-h-screen">
         <SidebarNav activePanel={page} onSelect={setPage} />
         <div className="min-w-0 flex-1">
-          <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-4 px-3 pb-6 pt-4 sm:px-5 lg:pb-4 xl:px-6">
+          <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-3 px-3 pb-6 pt-3 sm:px-4 lg:pb-4 xl:px-5">
             <TopBar />
-            <header className="luxury-panel overflow-hidden rounded-[2rem] p-5">
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_0%,rgba(250,204,21,0.10),transparent_28%),radial-gradient(circle_at_90%_10%,rgba(34,211,238,0.10),transparent_28%)]" />
-              <div className="relative flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <header className="trade-panel overflow-hidden rounded-3xl p-4">
+              <div className="relative flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                 <div className="min-w-0">
-                  <p className="text-xs font-black uppercase tracking-[0.28em] text-yellow-100">Semi-Auto Trading Helper</p>
+                  <p className="text-xs font-black uppercase tracking-[0.24em] text-trade-green">Rule-Based Trading Assistant</p>
                   <h1 className="mt-2 break-words text-3xl font-black tracking-tight text-white sm:text-5xl">Trade Buddy War Room</h1>
                   <p className="mt-2 text-sm font-semibold text-slate-300">{pageTitle(page)}</p>
                 </div>
-                <div className="luxury-gold max-w-xl rounded-2xl p-3 text-sm font-semibold leading-relaxed">{DISCLAIMER_TEXT}</div>
+                <div className="max-w-xl rounded-2xl border border-amber-300/20 bg-amber-300/10 p-3 text-sm font-semibold leading-relaxed text-amber-100">{DISCLAIMER_TEXT}</div>
               </div>
             </header>
 
@@ -71,9 +69,9 @@ export default function TradeBuddyWarRoom() {
 function renderPage(page: MobileWarRoomPanel, props: { risk?: RiskResult; onRiskChange: (risk: RiskResult) => void; onNavigate: (page: MobileWarRoomPanel) => void; onBuildPlan: (symbol?: string) => void; planSymbol: string }) {
   if (page === "dashboard") {
     return (
-      <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)]">
+      <div className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)]">
         <DashboardOverview onNavigate={(next) => props.onNavigate(next)} />
-        <div className="grid min-w-0 content-start gap-4">
+        <div className="grid min-w-0 content-start gap-3">
           <BuddyHeroCard />
           <TradeBuddyChat context={{ riskWarnings: props.risk?.warnings ?? [] }} />
         </div>
@@ -83,9 +81,9 @@ function renderPage(page: MobileWarRoomPanel, props: { risk?: RiskResult; onRisk
   if (page === "scanner") return <WatchlistScanner onBuildPlan={props.onBuildPlan} />;
   if (page === "plan") {
     return (
-      <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.85fr)]">
+      <div className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.85fr)]">
         <TradePlanBuilder initialSymbol={props.planSymbol} />
-        <div className="grid min-w-0 content-start gap-4">
+        <div className="grid min-w-0 content-start gap-3">
           <DirectionBiasCard initialInput={{ symbol: props.planSymbol }} />
           <RiskCalculator onRiskChange={props.onRiskChange} />
           <SetupChecklist risk={props.risk} />
@@ -99,7 +97,7 @@ function renderPage(page: MobileWarRoomPanel, props: { risk?: RiskResult; onRisk
   if (page === "tools" || page === "guide") return <ToolsPanel />;
   if (page === "more") {
     return (
-      <div className="grid gap-4">
+      <div className="grid gap-3">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <MoreButton label="รายการจากรูป" onClick={() => props.onNavigate("imageRecords")} />
           <MoreButton label="ค่าใช้จ่าย" onClick={() => props.onNavigate("expenses")} />
@@ -114,7 +112,7 @@ function renderPage(page: MobileWarRoomPanel, props: { risk?: RiskResult; onRisk
 }
 
 function MoreButton({ label, onClick }: { label: string; onClick: () => void }) {
-  return <button className="luxury-ghost min-h-16 rounded-3xl px-4 text-lg font-black" onClick={onClick} type="button">{label}</button>;
+  return <button className="trade-button-secondary min-h-16 rounded-2xl px-4 text-lg font-black" onClick={onClick} type="button">{label}</button>;
 }
 
 function toBottomPage(page: MobileWarRoomPanel) {

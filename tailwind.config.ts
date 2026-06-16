@@ -14,6 +14,17 @@ const config: Config = {
           cyan: "#38bdf8",
           danger: "#fb7185",
           warn: "#fbbf24"
+        },
+        trade: {
+          bg: "#101213",
+          panel: "#17191b",
+          card: "#1b1e20",
+          line: "rgba(255,255,255,0.10)",
+          green: "#1fbf75",
+          red: "#ff4d5e",
+          blue: "#4579ff",
+          purple: "#8d36ff",
+          gold: "#ffaf24"
         }
       },
       boxShadow: {

@@ -17,9 +17,9 @@ html {
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at 18% 8%, rgba(212, 175, 55, 0.12), transparent 28%),
-    radial-gradient(circle at 82% 0%, rgba(34, 211, 238, 0.13), transparent 30%),
-    linear-gradient(135deg, #030712 0%, #07111f 44%, #020617 100%);
+    radial-gradient(circle at 15% 0%, rgba(31, 191, 117, 0.12), transparent 28%),
+    radial-gradient(circle at 85% 0%, rgba(69, 121, 255, 0.10), transparent 30%),
+    linear-gradient(135deg, #17191a 0%, #101213 48%, #08090a 100%);
   color: #f8fafc;
 }
 
@@ -71,5 +71,25 @@ textarea {
 
   .luxury-ghost {
     @apply border border-cyan-200/25 bg-cyan-200/[0.06] text-cyan-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)];
+  }
+
+  .trade-panel {
+    @apply relative border border-white/10 bg-[#17191b]/95 shadow-[0_18px_60px_rgba(0,0,0,0.34),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl;
+  }
+
+  .trade-card {
+    @apply relative border border-white/10 bg-[#1b1e20]/90 shadow-[0_14px_40px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(255,255,255,0.035)] backdrop-blur;
+  }
+
+  .trade-button {
+    @apply bg-[#1fbf75] text-[#07100c] shadow-[0_14px_28px_rgba(31,191,117,0.18)] transition hover:bg-[#2ad986];
+  }
+
+  .trade-button-secondary {
+    @apply border border-white/10 bg-white/[0.055] text-slate-100 transition hover:border-[#1fbf75]/45 hover:bg-[#1fbf75]/10 hover:text-white;
+  }
+
+  .trade-danger-card {
+    @apply border border-[#ff4d5e]/25 bg-[#ff4d5e]/10 text-red-50;
   }
 }
