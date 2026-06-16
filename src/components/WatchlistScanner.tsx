@@ -76,39 +76,39 @@ export default function WatchlistScanner({ onBuildPlan }: { onBuildPlan?: (symbo
   }
 
   return (
-    <section className="trade-panel rounded-2xl p-4">
-      <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+    <section className="trade-panel rounded-[2rem] p-4 sm:p-5">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-cyan-200">Custom Crypto Watchlist</p>
-          <h2 className="mt-1 text-xl font-black text-white">Semi-Auto Setup Scan</h2>
-          <p className="mt-1 max-w-3xl text-sm text-slate-400">เพิ่มเหรียญที่ต้องการเฝ้าดู เช่น BTCUSDT, ETHUSDT, SOLUSDT ข้อมูลนี้ใช้เพื่อช่วยวางแผน ไม่ใช่คำสั่งซื้อขาย</p>
-          <p className="mt-2 text-xs font-bold text-cyan-100/80">รีเฟรชอัตโนมัติทุก 60 วินาที และกด Refresh เพื่อดึงข้อมูลใหม่ทันทีได้</p>
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-teal-700">Custom Crypto Watchlist</p>
+          <h2 className="mt-1 text-2xl font-black text-slate-950">Semi-Auto Setup Scan</h2>
+          <p className="mt-1 max-w-3xl text-sm font-semibold text-slate-600">เพิ่มเหรียญที่ต้องการเฝ้าดู เช่น BTCUSDT, ETHUSDT, SOLUSDT ข้อมูลนี้ใช้เพื่อช่วยวางแผน ไม่ใช่คำสั่งซื้อขาย</p>
+          <p className="mt-2 text-xs font-bold text-teal-700/80">รีเฟรชอัตโนมัติทุก 60 วินาที และกด Refresh เพื่อดึงข้อมูลใหม่ทันทีได้</p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row">
-          <select className="min-h-12 rounded-xl border border-white/[0.07] bg-black/25 px-3 text-sm font-black text-white outline-none focus:border-trade-green/45" value={timeframe} onChange={(event) => setTimeframe(event.target.value)}>
+          <select className="min-h-12 rounded-2xl border border-slate-200 bg-white/80 px-3 text-sm font-black text-slate-950 outline-none focus:border-teal-300" value={timeframe} onChange={(event) => setTimeframe(event.target.value)}>
             <option value="5m">5m</option>
             <option value="15m">15m</option>
             <option value="1h">1h</option>
             <option value="4h">4h</option>
             <option value="1d">1d</option>
           </select>
-          <button className="trade-button min-h-12 rounded-xl px-4 text-sm font-black disabled:opacity-60" disabled={loading} onClick={() => scan(true)} type="button">
+          <button className="trade-button min-h-12 rounded-2xl px-4 text-sm font-black disabled:opacity-60" disabled={loading} onClick={() => scan(true)} type="button">
             {loading ? "Scanning..." : "รีเฟรชข้อมูล"}
           </button>
         </div>
       </div>
 
-      <div className="mt-4 grid gap-4 xl:grid-cols-[0.9fr_1.4fr]">
+      <div className="mt-5 grid gap-4 xl:grid-cols-[0.86fr_1.44fr]">
         <div className="grid content-start gap-3">
           <WatchlistManager onChange={handleWatchlistChange} />
         </div>
         <div className="min-w-0">
-          {error ? <p className="mb-4 rounded-xl border border-red-300/20 bg-red-300/[0.08] p-3 text-sm font-bold text-red-100">{error}</p> : null}
+          {error ? <p className="mb-4 rounded-2xl bg-rose-50 p-3 text-sm font-bold text-rose-700 ring-1 ring-rose-200">{error}</p> : null}
           {failedSymbol ? <ManualFallback symbol={failedSymbol} onBuildPlan={onBuildPlan} /> : null}
           {items[0] ? <div className="mb-4"><MultiTimeframePanel symbol={items[0].symbol} /></div> : null}
           <div className="grid gap-3 xl:grid-cols-2">
             {loading && !items.length
-              ? watchlist.map((item) => <div className="min-h-72 animate-pulse rounded-2xl border border-white/[0.055] bg-white/[0.035]" key={item.id} />)
+              ? watchlist.map((item) => <div className="min-h-72 animate-pulse rounded-3xl bg-white/70 shadow-sm ring-1 ring-white" key={item.id} />)
               : items.map((item) => (
                   <WatchlistCard
                     key={item.symbol}
@@ -177,22 +177,22 @@ async function loadMarketSignal(symbol: string, timeframe: string, forceRefresh:
 
 function ManualFallback({ symbol, onBuildPlan }: { symbol: string; onBuildPlan?: (symbol: string) => void }) {
   return (
-    <div className="mb-4 rounded-2xl border border-yellow-300/20 bg-yellow-300/[0.08] p-4 text-yellow-50">
+    <div className="mb-4 rounded-3xl bg-amber-50 p-4 text-amber-800 ring-1 ring-amber-200">
       <h3 className="text-lg font-black">Manual fallback: {symbol}</h3>
       <p className="mt-1 text-sm font-semibold">ถ้าดึงข้อมูลไม่ได้ ให้กรอกราคาเองเพื่อเช็ก Risk ต่อได้</p>
       <div className="mt-3 grid gap-2 sm:grid-cols-2">
         {["Current price", "Entry", "Stop Loss", "Take Profit"].map((label) => (
           <label className="text-xs font-black" key={label}>
             {label}
-            <input className="mt-1 min-h-11 w-full rounded-xl border border-yellow-200/20 bg-black/30 px-3 text-white" type="number" />
+            <input className="mt-1 min-h-11 w-full rounded-xl border border-amber-200 bg-white/80 px-3 text-slate-950" type="number" />
           </label>
         ))}
         <label className="text-xs font-black sm:col-span-2">
           Notes
-          <textarea className="mt-1 min-h-20 w-full rounded-xl border border-yellow-200/20 bg-black/30 px-3 py-2 text-white" />
+          <textarea className="mt-1 min-h-20 w-full rounded-xl border border-amber-200 bg-white/80 px-3 py-2 text-slate-950" />
         </label>
       </div>
-      <button className="mt-3 min-h-11 rounded-xl bg-yellow-300 px-4 font-black text-slate-950" onClick={() => onBuildPlan?.(symbol)} type="button">
+      <button className="mt-3 min-h-11 rounded-xl bg-amber-300 px-4 font-black text-slate-950" onClick={() => onBuildPlan?.(symbol)} type="button">
         ส่งไปสร้างแผน
       </button>
     </div>

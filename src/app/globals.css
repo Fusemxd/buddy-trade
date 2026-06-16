@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * {
@@ -17,10 +17,11 @@ html {
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at 15% 0%, rgba(31, 191, 117, 0.12), transparent 28%),
-    radial-gradient(circle at 85% 0%, rgba(69, 121, 255, 0.10), transparent 30%),
-    linear-gradient(135deg, #17191a 0%, #101213 48%, #08090a 100%);
-  color: #f8fafc;
+    radial-gradient(circle at 12% 0%, rgba(20, 184, 166, 0.20), transparent 30%),
+    radial-gradient(circle at 88% 8%, rgba(59, 130, 246, 0.18), transparent 34%),
+    radial-gradient(circle at 50% 100%, rgba(250, 204, 21, 0.16), transparent 34%),
+    linear-gradient(135deg, #f8fafc 0%, #edf8ff 45%, #f7fff9 100%);
+  color: #0f172a;
 }
 
 ::selection {
@@ -33,16 +34,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(226, 232, 240, 0.65);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(34, 211, 238, 0.32);
+  background: rgba(20, 184, 166, 0.35);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(34, 211, 238, 0.55);
+  background: rgba(20, 184, 166, 0.55);
 }
 
 button,
@@ -74,22 +75,103 @@ textarea {
   }
 
   .trade-panel {
-    @apply relative border border-white/[0.06] bg-[#17191b]/90 shadow-[0_18px_54px_rgba(0,0,0,0.26),inset_0_1px_0_rgba(255,255,255,0.025)] backdrop-blur-xl;
+    @apply relative border border-white/70 bg-white/[0.78] shadow-[0_22px_70px_rgba(15,23,42,0.10),inset_0_1px_0_rgba(255,255,255,0.92)] backdrop-blur-xl;
   }
 
   .trade-card {
-    @apply relative border border-white/[0.055] bg-[#1b1e20]/[0.82] shadow-[0_12px_32px_rgba(0,0,0,0.22),inset_0_1px_0_rgba(255,255,255,0.02)] backdrop-blur;
+    @apply relative border border-white/70 bg-white/[0.72] shadow-[0_16px_48px_rgba(15,23,42,0.09),inset_0_1px_0_rgba(255,255,255,0.88)] backdrop-blur;
   }
 
   .trade-button {
-    @apply bg-[#1fbf75] text-[#07100c] shadow-[0_14px_28px_rgba(31,191,117,0.18)] transition hover:bg-[#2ad986];
+    @apply bg-gradient-to-r from-teal-400 to-emerald-400 text-slate-950 shadow-[0_14px_30px_rgba(20,184,166,0.22)] transition hover:from-teal-300 hover:to-emerald-300;
   }
 
   .trade-button-secondary {
-    @apply border border-white/[0.06] bg-white/[0.045] text-slate-100 transition hover:border-[#1fbf75]/35 hover:bg-[#1fbf75]/10 hover:text-white;
+    @apply border border-slate-200/80 bg-white/70 text-slate-700 shadow-[0_10px_30px_rgba(15,23,42,0.06)] transition hover:border-teal-300/70 hover:bg-teal-50 hover:text-slate-950;
   }
 
   .trade-danger-card {
-    @apply border border-[#ff4d5e]/25 bg-[#ff4d5e]/10 text-red-50;
+    @apply border border-rose-200/80 bg-rose-50/85 text-rose-700;
+  }
+
+  .bright-theme {
+    color: #0f172a;
+  }
+
+  .bright-theme .text-white,
+  .bright-theme .text-slate-100,
+  .bright-theme .text-slate-200 {
+    color: #0f172a !important;
+  }
+
+  .bright-theme .text-slate-300,
+  .bright-theme .text-slate-400,
+  .bright-theme .text-slate-500 {
+    color: #64748b !important;
+  }
+
+  .bright-theme .text-cyan-100,
+  .bright-theme .text-cyan-200,
+  .bright-theme .text-cyan-50 {
+    color: #0f766e !important;
+  }
+
+  .bright-theme .text-emerald-100,
+  .bright-theme .text-green-100 {
+    color: #047857 !important;
+  }
+
+  .bright-theme .text-yellow-100,
+  .bright-theme .text-yellow-50,
+  .bright-theme .text-amber-100 {
+    color: #92400e !important;
+  }
+
+  .bright-theme .text-red-100,
+  .bright-theme .text-red-50 {
+    color: #be123c !important;
+  }
+
+  .bright-theme [class*="bg-slate-950"],
+  .bright-theme [class*="bg-slate-900"],
+  .bright-theme [class*="bg-[#111314]"],
+  .bright-theme [class*="bg-[#101213]"],
+  .bright-theme [class*="bg-[#17191b]"],
+  .bright-theme [class*="bg-black"] {
+    background-color: rgba(255, 255, 255, 0.64) !important;
+  }
+
+  .bright-theme [class*="border-slate-700"],
+  .bright-theme [class*="border-white"] {
+    border-color: rgba(203, 213, 225, 0.70) !important;
+  }
+
+  .bright-theme input,
+  .bright-theme select,
+  .bright-theme textarea {
+    background: rgba(255, 255, 255, 0.78) !important;
+    color: #0f172a !important;
+  }
+
+  .bright-theme input::placeholder,
+  .bright-theme textarea::placeholder {
+    color: #94a3b8 !important;
+  }
+
+  .bright-theme .keep-dark {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+  }
+
+  .bright-theme .keep-dark .text-white,
+  .bright-theme .keep-dark .text-slate-100,
+  .bright-theme .keep-dark .text-slate-200,
+  .bright-theme .keep-dark .text-slate-300 {
+    color: #e2e8f0 !important;
+  }
+
+  .bright-theme .keep-dark .text-slate-400,
+  .bright-theme .keep-dark .text-slate-500 {
+    color: #94a3b8 !important;
   }
 }

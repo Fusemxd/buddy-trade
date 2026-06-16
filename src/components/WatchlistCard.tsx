@@ -4,10 +4,10 @@ import type { MarketCandle } from "@/types/marketData";
 import type { WatchlistSetup } from "@/types/setup";
 
 const statusClass = {
-  WATCH_LONG: "border-emerald-300/[0.16] bg-emerald-300/[0.055] text-emerald-100",
-  NO_CHASE: "border-red-300/[0.18] bg-red-300/[0.055] text-red-100",
-  WEAK: "border-yellow-300/[0.18] bg-yellow-300/[0.055] text-yellow-100",
-  WAIT: "border-white/[0.055] bg-white/[0.035] text-slate-200"
+  WATCH_LONG: "bg-emerald-50/90 ring-emerald-200/80 text-emerald-800",
+  NO_CHASE: "bg-rose-50/90 ring-rose-200/80 text-rose-800",
+  WEAK: "bg-amber-50/90 ring-amber-200/80 text-amber-800",
+  WAIT: "bg-white/76 ring-white text-slate-700"
 };
 
 const statusDescription = {
@@ -18,10 +18,10 @@ const statusDescription = {
 };
 
 const biasTone: Record<DirectionBiasResult["bias"], string> = {
-  LONG_BIAS: "border-emerald-300/[0.16] bg-emerald-300/[0.06] text-emerald-50",
-  SHORT_BIAS: "border-sky-300/[0.16] bg-sky-300/[0.06] text-sky-50",
-  WAIT: "border-white/[0.055] bg-black/20 text-slate-100",
-  BLOCKED: "border-red-300/[0.18] bg-red-300/[0.07] text-red-50"
+  LONG_BIAS: "bg-emerald-50 text-emerald-800 ring-emerald-200",
+  SHORT_BIAS: "bg-sky-50 text-sky-800 ring-sky-200",
+  WAIT: "bg-slate-50 text-slate-700 ring-slate-200",
+  BLOCKED: "bg-rose-50 text-rose-800 ring-rose-200"
 };
 
 export default function WatchlistCard({
@@ -52,16 +52,16 @@ export default function WatchlistCard({
   });
 
   return (
-    <article className={`relative overflow-hidden rounded-2xl border p-4 shadow-[0_12px_30px_rgba(0,0,0,0.18)] ${statusClass[setup.marketStatus]}`}>
-      <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-current opacity-25" />
-      <div className="flex items-start justify-between gap-3">
+    <article className={`relative overflow-hidden rounded-[1.75rem] p-4 shadow-[0_18px_48px_rgba(15,23,42,0.10)] ring-1 ${statusClass[setup.marketStatus]}`}>
+      <div className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-white/60 blur-2xl" />
+      <div className="relative flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="truncate text-xl font-black text-white">{setup.symbol}</h3>
+          <h3 className="truncate text-2xl font-black text-slate-950">{setup.symbol}</h3>
           <p className="mt-1 text-sm font-bold">{setup.statusText}</p>
         </div>
         <div className="flex flex-col items-end gap-1">
-          <span className="rounded-full border border-white/[0.08] bg-black/20 px-3 py-1 text-xs font-black">{setup.quality.label}</span>
-          <span className="rounded-full border border-cyan-200/[0.12] bg-cyan-200/[0.07] px-2.5 py-1 text-[10px] font-black text-cyan-50">Binance</span>
+          <span className="rounded-full bg-white/75 px-3 py-1 text-xs font-black text-slate-700 ring-1 ring-white">{setup.quality.label}</span>
+          <span className="rounded-full bg-cyan-50 px-2.5 py-1 text-[10px] font-black text-cyan-700 ring-1 ring-cyan-100">Binance</span>
         </div>
       </div>
 
@@ -77,27 +77,27 @@ export default function WatchlistCard({
         <Metric label="EMA50" value={format(setup.ema50)} />
       </div>
 
-      <div className="mt-4 rounded-xl bg-black/20 p-3 ring-1 ring-white/[0.055]">
-        <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Setup Quality Score</p>
-        <p className="mt-1 text-2xl font-black text-white">{setup.quality.score}</p>
-        <p className="mt-1 text-sm text-slate-300">{setup.quality.reason}</p>
+      <div className="mt-4 rounded-2xl bg-white/70 p-3 ring-1 ring-white">
+        <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Setup Quality Score</p>
+        <p className="mt-1 text-2xl font-black text-slate-950">{setup.quality.score}</p>
+        <p className="mt-1 text-sm font-semibold text-slate-600">{setup.quality.reason}</p>
       </div>
 
-      <p className="mt-3 rounded-xl bg-black/20 p-3 text-sm font-bold text-slate-100 ring-1 ring-white/[0.055]">{statusDescription[setup.marketStatus]}</p>
-      <p className="mt-3 text-sm font-bold text-slate-200">Next step: {setup.nextStep}</p>
-      <p className="mt-2 text-xs font-semibold text-slate-400">{setup.cached ? "ข้อมูล cache ล่าสุดเมื่อ " : "อัปเดตเมื่อ "}{formatTime(setup.updatedAt)} เวลาไทย · auto refresh ทุก 60 วิ</p>
+      <p className="mt-3 rounded-2xl bg-white/70 p-3 text-sm font-bold text-slate-700 ring-1 ring-white">{statusDescription[setup.marketStatus]}</p>
+      <p className="mt-3 text-sm font-black text-slate-700">Next step: {setup.nextStep}</p>
+      <p className="mt-2 text-xs font-semibold text-slate-500">{setup.cached ? "ข้อมูล cache ล่าสุดเมื่อ " : "อัปเดตเมื่อ "}{formatTime(setup.updatedAt)} เวลาไทย · auto refresh ทุก 60 วิ</p>
 
       <div className="mt-4 grid grid-cols-2 gap-2">
-        <button className="min-h-12 rounded-xl border border-cyan-300/[0.18] bg-cyan-300/[0.08] px-4 text-sm font-black text-cyan-100" onClick={() => onBuildPlan?.(setup.symbol)} type="button">
+        <button className="min-h-12 rounded-2xl bg-slate-950 px-4 text-sm font-black text-white shadow-[0_12px_26px_rgba(15,23,42,0.16)]" onClick={() => onBuildPlan?.(setup.symbol)} type="button">
           Create Plan
         </button>
-        <button className="min-h-12 rounded-xl border border-white/[0.08] bg-black/20 px-4 text-sm font-black text-slate-100" onClick={() => onRefresh?.(setup.symbol)} type="button">
+        <button className="min-h-12 rounded-2xl bg-white/75 px-4 text-sm font-black text-slate-700 ring-1 ring-slate-200" onClick={() => onRefresh?.(setup.symbol)} type="button">
           Refresh
         </button>
-        <button className="min-h-12 rounded-xl border border-yellow-300/[0.18] bg-yellow-300/[0.08] px-4 text-sm font-black text-yellow-100" onClick={() => onFallback?.(setup.symbol)} type="button">
+        <button className="min-h-12 rounded-2xl bg-amber-50 px-4 text-sm font-black text-amber-700 ring-1 ring-amber-200" onClick={() => onFallback?.(setup.symbol)} type="button">
           Manual
         </button>
-        <button className="min-h-12 rounded-xl border border-red-300/[0.18] bg-red-300/[0.08] px-4 text-sm font-black text-red-100" onClick={() => onRemove?.(setup.symbol)} type="button">
+        <button className="min-h-12 rounded-2xl bg-rose-50 px-4 text-sm font-black text-rose-700 ring-1 ring-rose-200" onClick={() => onRemove?.(setup.symbol)} type="button">
           Remove
         </button>
       </div>
@@ -115,32 +115,32 @@ function TradingChart({ candles, fallbackCloses, status, timeframe }: { candles:
   const ema50 = buildEma(closes, 50);
 
   return (
-    <div className="mt-4 overflow-hidden rounded-xl bg-slate-950/70 ring-1 ring-white/[0.055]">
-      <div className="flex items-center justify-between border-b border-white/[0.055] px-3 py-2 text-xs font-black text-slate-300">
+    <div className="keep-dark mt-4 overflow-hidden rounded-2xl shadow-[0_18px_45px_rgba(15,23,42,0.18)]">
+      <div className="flex items-center justify-between border-b border-white/10 px-3 py-2 text-xs font-black text-slate-300">
         <span>Chart · {timeframe}</span>
         <span className="text-slate-500">Public Binance candles</span>
       </div>
       <div className="relative p-3">
-        <div className="absolute right-3 top-3 z-10 rounded-lg bg-slate-950/75 px-2 py-1 text-[10px] font-black text-slate-300 ring-1 ring-white/[0.055]">
+        <div className="absolute right-3 top-3 z-10 rounded-lg bg-slate-900/80 px-2 py-1 text-[10px] font-black text-slate-300 ring-1 ring-white/10">
           H {format(high)} / L {format(low)}
         </div>
         <svg aria-label="Trading candlestick chart" className="h-44 w-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 56">
           <defs>
             <linearGradient id={`chartGlow-${status}`} x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="rgba(34,211,238,0.16)" />
+              <stop offset="0%" stopColor="rgba(45,212,191,0.18)" />
               <stop offset="100%" stopColor="rgba(15,23,42,0)" />
             </linearGradient>
           </defs>
           <rect fill={`url(#chartGlow-${status})`} height="56" width="100" x="0" y="0" />
-          {[10, 22, 34, 46].map((y) => <path d={`M0 ${y} H100`} key={y} stroke="rgba(148,163,184,0.13)" strokeWidth="0.45" />)}
-          {[20, 40, 60, 80].map((x) => <path d={`M${x} 0 V56`} key={x} stroke="rgba(148,163,184,0.08)" strokeWidth="0.45" />)}
+          {[10, 22, 34, 46].map((y) => <path d={`M0 ${y} H100`} key={y} stroke="rgba(148,163,184,0.16)" strokeWidth="0.45" />)}
+          {[20, 40, 60, 80].map((x) => <path d={`M${x} 0 V56`} key={x} stroke="rgba(148,163,184,0.10)" strokeWidth="0.45" />)}
           {visible.length ? visible.map((candle, index) => <Candle candle={candle} high={high} key={`${candle.time}-${index}`} low={low} range={range} total={visible.length} index={index} />) : <FallbackLine closes={closes} high={high} low={low} range={range} />}
           <IndicatorLine color="#facc15" high={high} low={low} range={range} values={ema20} />
           <IndicatorLine color="#60a5fa" high={high} low={low} range={range} values={ema50} />
         </svg>
-        <div className="mt-2 flex items-center gap-3 text-[10px] font-bold text-slate-400">
+        <div className="mt-2 flex flex-wrap items-center gap-3 text-[10px] font-bold text-slate-400">
           <span className="inline-flex items-center gap-1"><i className="h-2 w-4 rounded-full bg-emerald-300" /> Up</span>
-          <span className="inline-flex items-center gap-1"><i className="h-2 w-4 rounded-full bg-red-300" /> Down</span>
+          <span className="inline-flex items-center gap-1"><i className="h-2 w-4 rounded-full bg-rose-300" /> Down</span>
           <span className="inline-flex items-center gap-1"><i className="h-0.5 w-4 bg-yellow-300" /> EMA20</span>
           <span className="inline-flex items-center gap-1"><i className="h-0.5 w-4 bg-blue-300" /> EMA50</span>
         </div>
@@ -154,7 +154,7 @@ function Candle({ candle, high, low, range, index, total }: { candle: MarketCand
   const x = index * slot + slot / 2;
   const width = Math.max(0.8, Math.min(1.9, slot * 0.48));
   const up = candle.close >= candle.open;
-  const color = up ? "#34d399" : "#f87171";
+  const color = up ? "#34d399" : "#fb7185";
   const wickTop = yFor(candle.high, high, low, range);
   const wickBottom = yFor(candle.low, high, low, range);
   const openY = yFor(candle.open, high, low, range);
@@ -173,7 +173,7 @@ function Candle({ candle, high, low, range, index, total }: { candle: MarketCand
 function FallbackLine({ closes, high, low, range }: { closes: number[]; high: number; low: number; range: number }) {
   if (closes.length < 2) return null;
   const points = closes.map((value, index) => `${(index / (closes.length - 1)) * 100},${yFor(value, high, low, range)}`).join(" ");
-  return <polyline fill="none" points={points} stroke="#67e8f9" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />;
+  return <polyline fill="none" points={points} stroke="#2dd4bf" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />;
 }
 
 function IndicatorLine({ values, color, high, low, range }: { values: Array<number | null>; color: string; high: number; low: number; range: number }) {
@@ -182,20 +182,20 @@ function IndicatorLine({ values, color, high, low, range }: { values: Array<numb
     .filter(Boolean)
     .join(" ");
   if (!points) return null;
-  return <polyline fill="none" points={points} stroke={color} strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.9" strokeWidth="0.9" />;
+  return <polyline fill="none" points={points} stroke={color} strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.95" strokeWidth="0.9" />;
 }
 
 function BiasMiniCard({ bias }: { bias: DirectionBiasResult }) {
   return (
-    <div className={`mt-3 rounded-xl border p-3 ${biasTone[bias.bias]}`}>
+    <div className={`mt-3 rounded-2xl p-3 ring-1 ${biasTone[bias.bias]}`}>
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.16em] opacity-70">ดูฝั่งที่น่าจับตา</p>
-          <p className="mt-1 text-lg font-black text-white">{bias.biasText}</p>
+          <p className="mt-1 text-lg font-black">{bias.biasText}</p>
         </div>
         <div className="grid grid-cols-2 gap-1 text-center text-xs font-black">
-          <span className="rounded-lg bg-black/20 px-2 py-1 ring-1 ring-white/[0.055]">L {bias.longScore}</span>
-          <span className="rounded-lg bg-black/20 px-2 py-1 ring-1 ring-white/[0.055]">S {bias.shortScore}</span>
+          <span className="rounded-xl bg-white/70 px-2 py-1 ring-1 ring-white">L {bias.longScore}</span>
+          <span className="rounded-xl bg-white/70 px-2 py-1 ring-1 ring-white">S {bias.shortScore}</span>
         </div>
       </div>
       <p className="mt-2 text-xs font-semibold opacity-85">นี่คือ bias จากข้อมูลในการ์ด ไม่ใช่คำสั่งซื้อขาย</p>
@@ -205,9 +205,9 @@ function BiasMiniCard({ bias }: { bias: DirectionBiasResult }) {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl bg-black/20 p-3 ring-1 ring-white/[0.055]">
-      <p className="text-[10px] font-bold uppercase tracking-wide opacity-60">{label}</p>
-      <p className="mt-1 break-words font-black text-white">{value}</p>
+    <div className="rounded-2xl bg-white/70 p-3 ring-1 ring-white">
+      <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">{label}</p>
+      <p className="mt-1 break-words font-black text-slate-950">{value}</p>
     </div>
   );
 }
