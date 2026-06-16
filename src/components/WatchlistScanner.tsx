@@ -165,7 +165,15 @@ async function loadMarketSignal(symbol: string, timeframe: string, forceRefresh:
     changePercent: result.quote?.changePercent,
     cached: result.stale,
     updatedAt: result.quote?.timestamp ?? new Date().toISOString(),
-    recentCloses: candles.slice(-48).map((candle) => candle.close)
+    recentCloses: candles.slice(-48).map((candle) => candle.close),
+    recentCandles: candles.slice(-48).map((candle) => ({
+      time: candle.openTime,
+      open: candle.open,
+      high: candle.high,
+      low: candle.low,
+      close: candle.close,
+      volume: candle.volume
+    }))
   };
 }
 

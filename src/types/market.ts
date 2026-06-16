@@ -1,3 +1,5 @@
+import type { MarketCandle } from "./marketData";
+
 export type Kline = {
   openTime: number;
   open: number;
@@ -18,6 +20,7 @@ export type MarketSignal = {
   cached?: boolean;
   updatedAt?: string;
   recentCloses?: number[];
+  recentCandles?: MarketCandle[];
   lastPrice: number;
   latestClose: number;
   rsi: number | null;

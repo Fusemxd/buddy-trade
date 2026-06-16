@@ -1,4 +1,5 @@
 import type { MarketStatus } from "./market";
+import type { MarketCandle } from "./marketData";
 
 export type SetupQualityLabel = "low" | "medium" | "high" | "blocked";
 
@@ -29,6 +30,7 @@ export type WatchlistSetup = {
   cached?: boolean;
   updatedAt?: string;
   recentCloses?: number[];
+  recentCandles?: MarketCandle[];
   ema20: number | null;
   ema50: number | null;
   rsi14: number | null;

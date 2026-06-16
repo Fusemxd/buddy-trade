@@ -1,5 +1,6 @@
 import { calculateDirectionBias } from "@/lib/directionBias";
 import type { DirectionBiasResult } from "@/types/directionBias";
+import type { MarketCandle } from "@/types/marketData";
 import type { WatchlistSetup } from "@/types/setup";
 
 const statusClass = {
@@ -63,7 +64,7 @@ export default function WatchlistCard({
         </div>
       </div>
 
-      <MiniPriceChart values={setup.recentCloses ?? []} status={setup.marketStatus} />
+      <TradingChart candles={setup.recentCandles ?? []} fallbackCloses={setup.recentCloses ?? []} status={setup.marketStatus} timeframe={setup.timeframe ?? "15m"} />
       <BiasMiniCard bias={bias} />
 
       <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
@@ -103,6 +104,86 @@ export default function WatchlistCard({
   );
 }
 
+function TradingChart({ candles, fallbackCloses, status, timeframe }: { candles: MarketCandle[]; fallbackCloses: number[]; status: WatchlistSetup["marketStatus"]; timeframe: string }) {
+  const visible = candles.slice(-36);
+  const closes = visible.length ? visible.map((candle) => candle.close) : fallbackCloses.slice(-36);
+  const high = visible.length ? Math.max(...visible.map((candle) => candle.high)) : Math.max(...closes);
+  const low = visible.length ? Math.min(...visible.map((candle) => candle.low)) : Math.min(...closes);
+  const range = high - low || 1;
+  const ema20 = buildEma(closes, 20);
+  const ema50 = buildEma(closes, 50);
+
+  return (
+    <div className="mt-4 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/85">
+      <div className="flex items-center justify-between border-b border-white/10 px-3 py-2 text-xs font-black text-slate-300">
+        <span>Chart · {timeframe}</span>
+        <span className="text-slate-500">Public Binance candles</span>
+      </div>
+      <div className="relative p-3">
+        <div className="absolute right-3 top-3 z-10 rounded-lg border border-white/10 bg-slate-950/80 px-2 py-1 text-[10px] font-black text-slate-300">
+          H {format(high)} / L {format(low)}
+        </div>
+        <svg aria-label="Trading candlestick chart" className="h-44 w-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 56">
+          <defs>
+            <linearGradient id={`chartGlow-${status}`} x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="rgba(34,211,238,0.16)" />
+              <stop offset="100%" stopColor="rgba(15,23,42,0)" />
+            </linearGradient>
+          </defs>
+          <rect fill={`url(#chartGlow-${status})`} height="56" width="100" x="0" y="0" />
+          {[10, 22, 34, 46].map((y) => <path d={`M0 ${y} H100`} key={y} stroke="rgba(148,163,184,0.13)" strokeWidth="0.45" />)}
+          {[20, 40, 60, 80].map((x) => <path d={`M${x} 0 V56`} key={x} stroke="rgba(148,163,184,0.08)" strokeWidth="0.45" />)}
+          {visible.length ? visible.map((candle, index) => <Candle candle={candle} high={high} key={`${candle.time}-${index}`} low={low} range={range} total={visible.length} index={index} />) : <FallbackLine closes={closes} high={high} low={low} range={range} />}
+          <IndicatorLine color="#facc15" high={high} low={low} range={range} values={ema20} />
+          <IndicatorLine color="#60a5fa" high={high} low={low} range={range} values={ema50} />
+        </svg>
+        <div className="mt-2 flex items-center gap-3 text-[10px] font-bold text-slate-400">
+          <span className="inline-flex items-center gap-1"><i className="h-2 w-4 rounded-full bg-emerald-300" /> Up</span>
+          <span className="inline-flex items-center gap-1"><i className="h-2 w-4 rounded-full bg-red-300" /> Down</span>
+          <span className="inline-flex items-center gap-1"><i className="h-0.5 w-4 bg-yellow-300" /> EMA20</span>
+          <span className="inline-flex items-center gap-1"><i className="h-0.5 w-4 bg-blue-300" /> EMA50</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Candle({ candle, high, low, range, index, total }: { candle: MarketCandle; high: number; low: number; range: number; index: number; total: number }) {
+  const slot = 100 / total;
+  const x = index * slot + slot / 2;
+  const width = Math.max(0.8, Math.min(1.9, slot * 0.48));
+  const up = candle.close >= candle.open;
+  const color = up ? "#34d399" : "#f87171";
+  const wickTop = yFor(candle.high, high, low, range);
+  const wickBottom = yFor(candle.low, high, low, range);
+  const openY = yFor(candle.open, high, low, range);
+  const closeY = yFor(candle.close, high, low, range);
+  const bodyY = Math.min(openY, closeY);
+  const bodyHeight = Math.max(0.75, Math.abs(openY - closeY));
+
+  return (
+    <g>
+      <line stroke={color} strokeLinecap="round" strokeWidth="0.45" x1={x} x2={x} y1={wickTop} y2={wickBottom} />
+      <rect fill={color} height={bodyHeight} rx="0.35" width={width} x={x - width / 2} y={bodyY} />
+    </g>
+  );
+}
+
+function FallbackLine({ closes, high, low, range }: { closes: number[]; high: number; low: number; range: number }) {
+  if (closes.length < 2) return null;
+  const points = closes.map((value, index) => `${(index / (closes.length - 1)) * 100},${yFor(value, high, low, range)}`).join(" ");
+  return <polyline fill="none" points={points} stroke="#67e8f9" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />;
+}
+
+function IndicatorLine({ values, color, high, low, range }: { values: Array<number | null>; color: string; high: number; low: number; range: number }) {
+  const points = values
+    .map((value, index) => value === null ? null : `${(index / Math.max(1, values.length - 1)) * 100},${yFor(value, high, low, range)}`)
+    .filter(Boolean)
+    .join(" ");
+  if (!points) return null;
+  return <polyline fill="none" points={points} stroke={color} strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.9" strokeWidth="0.9" />;
+}
+
 function BiasMiniCard({ bias }: { bias: DirectionBiasResult }) {
   return (
     <div className={`mt-3 rounded-2xl border p-3 ${biasTone[bias.bias]}`}>
@@ -121,40 +202,6 @@ function BiasMiniCard({ bias }: { bias: DirectionBiasResult }) {
   );
 }
 
-function MiniPriceChart({ values, status }: { values: number[]; status: WatchlistSetup["marketStatus"] }) {
-  const stroke = status === "WATCH_LONG" ? "#34d399" : status === "NO_CHASE" ? "#f87171" : status === "WEAK" ? "#facc15" : "#94a3b8";
-  const points = buildPoints(values);
-
-  return (
-    <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/75 p-3">
-      <div className="mb-2 flex items-center justify-between text-xs font-black text-slate-400">
-        <span>Mini chart</span>
-        <span>Public candles</span>
-      </div>
-      <svg aria-label="Mini price chart" className="h-24 w-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 40">
-        <path d="M0 32 H100" stroke="rgba(148,163,184,0.18)" strokeWidth="0.7" />
-        <path d="M0 20 H100" stroke="rgba(148,163,184,0.12)" strokeWidth="0.7" />
-        <path d="M0 8 H100" stroke="rgba(148,163,184,0.18)" strokeWidth="0.7" />
-        {points ? <polyline fill="none" points={points} stroke={stroke} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" /> : null}
-      </svg>
-    </div>
-  );
-}
-
-function buildPoints(values: number[]) {
-  if (values.length < 2) return "";
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = max - min || 1;
-  return values
-    .map((value, index) => {
-      const x = (index / (values.length - 1)) * 100;
-      const y = 36 - ((value - min) / range) * 32;
-      return `${x.toFixed(2)},${y.toFixed(2)}`;
-    })
-    .join(" ");
-}
-
 function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
@@ -164,8 +211,22 @@ function Metric({ label, value }: { label: string; value: string }) {
   );
 }
 
+function buildEma(values: number[], period: number) {
+  if (!values.length) return [];
+  const multiplier = 2 / (period + 1);
+  let previous = values[0];
+  return values.map((value, index) => {
+    previous = index === 0 ? value : (value - previous) * multiplier + previous;
+    return previous;
+  });
+}
+
+function yFor(value: number, high: number, low: number, range: number) {
+  return 52 - ((value - low) / range) * 48;
+}
+
 function format(value: number | null | undefined) {
-  if (value === null || value === undefined) return "-";
+  if (value === null || value === undefined || Number.isNaN(value)) return "-";
   return value >= 100 ? value.toFixed(2) : value.toFixed(4);
 }
 

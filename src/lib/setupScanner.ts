@@ -42,6 +42,7 @@ export function buildWatchlistSetup(market: MarketSignal): WatchlistSetup {
     cached: market.cached,
     updatedAt: market.updatedAt,
     recentCloses: market.recentCloses,
+    recentCandles: market.recentCandles,
     ema20: market.ema20,
     ema50: market.ema50,
     rsi14: market.rsi14,
