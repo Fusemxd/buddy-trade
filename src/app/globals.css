@@ -74,11 +74,11 @@ textarea {
   }
 
   .trade-panel {
-    @apply relative border border-white/10 bg-[#17191b]/95 shadow-[0_18px_60px_rgba(0,0,0,0.34),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl;
+    @apply relative border border-white/[0.06] bg-[#17191b]/90 shadow-[0_18px_54px_rgba(0,0,0,0.26),inset_0_1px_0_rgba(255,255,255,0.025)] backdrop-blur-xl;
   }
 
   .trade-card {
-    @apply relative border border-white/10 bg-[#1b1e20]/90 shadow-[0_14px_40px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(255,255,255,0.035)] backdrop-blur;
+    @apply relative border border-white/[0.055] bg-[#1b1e20]/[0.82] shadow-[0_12px_32px_rgba(0,0,0,0.22),inset_0_1px_0_rgba(255,255,255,0.02)] backdrop-blur;
   }
 
   .trade-button {
@@ -86,7 +86,7 @@ textarea {
   }
 
   .trade-button-secondary {
-    @apply border border-white/10 bg-white/[0.055] text-slate-100 transition hover:border-[#1fbf75]/45 hover:bg-[#1fbf75]/10 hover:text-white;
+    @apply border border-white/[0.06] bg-white/[0.045] text-slate-100 transition hover:border-[#1fbf75]/35 hover:bg-[#1fbf75]/10 hover:text-white;
   }
 
   .trade-danger-card {

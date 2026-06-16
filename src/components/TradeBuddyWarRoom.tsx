@@ -40,14 +40,14 @@ export default function TradeBuddyWarRoom() {
         <div className="min-w-0 flex-1">
           <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-3 px-3 pb-6 pt-3 sm:px-4 lg:pb-4 xl:px-5">
             <TopBar />
-            <header className="trade-panel overflow-hidden rounded-3xl p-4">
+            <header className="trade-panel overflow-hidden rounded-2xl p-4">
               <div className="relative flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                 <div className="min-w-0">
                   <p className="text-xs font-black uppercase tracking-[0.24em] text-trade-green">Rule-Based Trading Assistant</p>
                   <h1 className="mt-2 break-words text-3xl font-black tracking-tight text-white sm:text-5xl">Trade Buddy War Room</h1>
                   <p className="mt-2 text-sm font-semibold text-slate-300">{pageTitle(page)}</p>
                 </div>
-                <div className="max-w-xl rounded-2xl border border-amber-300/20 bg-amber-300/10 p-3 text-sm font-semibold leading-relaxed text-amber-100">{DISCLAIMER_TEXT}</div>
+                <div className="max-w-xl rounded-xl border border-amber-300/[0.12] bg-amber-300/[0.07] p-3 text-sm font-semibold leading-relaxed text-amber-100">{DISCLAIMER_TEXT}</div>
               </div>
             </header>
 

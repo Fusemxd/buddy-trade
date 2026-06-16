@@ -21,10 +21,10 @@ export default function WatchlistItemCard({ item, onUpdate, onRemove }: { item: 
   }
 
   return (
-    <article className="rounded-2xl border border-slate-700 bg-slate-950/70 p-3">
+    <article className="rounded-xl bg-black/20 p-3 ring-1 ring-white/[0.055]">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          {editing ? <input className="min-h-11 w-full rounded-xl border border-slate-700 bg-slate-900 px-3 font-black text-white" value={symbol} onChange={(event) => setSymbol(event.target.value)} /> : <p className="truncate text-lg font-black text-white">{item.symbol}</p>}
+          {editing ? <input className="min-h-11 w-full rounded-xl border border-white/[0.07] bg-black/30 px-3 font-black text-white outline-none focus:border-trade-green/45" value={symbol} onChange={(event) => setSymbol(event.target.value)} /> : <p className="truncate text-lg font-black text-white">{item.symbol}</p>}
           <p className="text-xs font-semibold text-slate-400">Binance Public API</p>
         </div>
         <button className={`min-h-10 rounded-xl px-3 text-sm font-black ${item.favorite ? "bg-yellow-300 text-slate-950" : "bg-slate-800 text-slate-200"}`} onClick={() => onUpdate({ ...item, favorite: !item.favorite, updatedAt: new Date().toISOString() })} type="button">
@@ -36,9 +36,9 @@ export default function WatchlistItemCard({ item, onUpdate, onRemove }: { item: 
         {editing ? (
           <button className="min-h-10 rounded-xl bg-cyan-300 font-black text-slate-950" onClick={save} type="button">Save</button>
         ) : (
-          <button className="min-h-10 rounded-xl border border-cyan-300/30 bg-cyan-300/10 font-black text-cyan-100" onClick={() => setEditing(true)} type="button">Edit</button>
+          <button className="min-h-10 rounded-xl border border-cyan-300/[0.18] bg-cyan-300/[0.08] font-black text-cyan-100" onClick={() => setEditing(true)} type="button">Edit</button>
         )}
-        <button className="min-h-10 rounded-xl border border-red-300/30 bg-red-300/10 font-black text-red-100" onClick={() => onRemove(item.id)} type="button">Remove</button>
+        <button className="min-h-10 rounded-xl border border-red-300/[0.18] bg-red-300/[0.08] font-black text-red-100" onClick={() => onRemove(item.id)} type="button">Remove</button>
       </div>
     </article>
   );

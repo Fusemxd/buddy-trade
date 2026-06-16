@@ -4,10 +4,10 @@ import type { MarketCandle } from "@/types/marketData";
 import type { WatchlistSetup } from "@/types/setup";
 
 const statusClass = {
-  WATCH_LONG: "border-emerald-300/35 bg-emerald-300/10 text-emerald-100",
-  NO_CHASE: "border-red-300/40 bg-red-300/10 text-red-100",
-  WEAK: "border-yellow-300/35 bg-yellow-300/10 text-yellow-100",
-  WAIT: "border-slate-600 bg-slate-900/80 text-slate-200"
+  WATCH_LONG: "border-emerald-300/[0.16] bg-emerald-300/[0.055] text-emerald-100",
+  NO_CHASE: "border-red-300/[0.18] bg-red-300/[0.055] text-red-100",
+  WEAK: "border-yellow-300/[0.18] bg-yellow-300/[0.055] text-yellow-100",
+  WAIT: "border-white/[0.055] bg-white/[0.035] text-slate-200"
 };
 
 const statusDescription = {
@@ -18,10 +18,10 @@ const statusDescription = {
 };
 
 const biasTone: Record<DirectionBiasResult["bias"], string> = {
-  LONG_BIAS: "border-emerald-300/30 bg-emerald-300/10 text-emerald-50",
-  SHORT_BIAS: "border-sky-300/30 bg-sky-300/10 text-sky-50",
-  WAIT: "border-slate-500/40 bg-slate-950/50 text-slate-100",
-  BLOCKED: "border-red-300/35 bg-red-300/10 text-red-50"
+  LONG_BIAS: "border-emerald-300/[0.16] bg-emerald-300/[0.06] text-emerald-50",
+  SHORT_BIAS: "border-sky-300/[0.16] bg-sky-300/[0.06] text-sky-50",
+  WAIT: "border-white/[0.055] bg-black/20 text-slate-100",
+  BLOCKED: "border-red-300/[0.18] bg-red-300/[0.07] text-red-50"
 };
 
 export default function WatchlistCard({
@@ -52,15 +52,16 @@ export default function WatchlistCard({
   });
 
   return (
-    <article className={`rounded-3xl border p-4 ${statusClass[setup.marketStatus]}`}>
+    <article className={`relative overflow-hidden rounded-2xl border p-4 shadow-[0_12px_30px_rgba(0,0,0,0.18)] ${statusClass[setup.marketStatus]}`}>
+      <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-current opacity-25" />
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="truncate text-xl font-black text-white">{setup.symbol}</h3>
           <p className="mt-1 text-sm font-bold">{setup.statusText}</p>
         </div>
         <div className="flex flex-col items-end gap-1">
-          <span className="rounded-full border border-white/15 bg-black/25 px-3 py-1 text-xs font-black">{setup.quality.label}</span>
-          <span className="rounded-full border border-cyan-200/20 bg-cyan-200/10 px-2.5 py-1 text-[10px] font-black text-cyan-50">Binance</span>
+          <span className="rounded-full border border-white/[0.08] bg-black/20 px-3 py-1 text-xs font-black">{setup.quality.label}</span>
+          <span className="rounded-full border border-cyan-200/[0.12] bg-cyan-200/[0.07] px-2.5 py-1 text-[10px] font-black text-cyan-50">Binance</span>
         </div>
       </div>
 
@@ -76,27 +77,27 @@ export default function WatchlistCard({
         <Metric label="EMA50" value={format(setup.ema50)} />
       </div>
 
-      <div className="mt-4 rounded-2xl border border-white/10 bg-black/20 p-3">
+      <div className="mt-4 rounded-xl bg-black/20 p-3 ring-1 ring-white/[0.055]">
         <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Setup Quality Score</p>
         <p className="mt-1 text-2xl font-black text-white">{setup.quality.score}</p>
         <p className="mt-1 text-sm text-slate-300">{setup.quality.reason}</p>
       </div>
 
-      <p className="mt-3 rounded-2xl border border-white/10 bg-black/20 p-3 text-sm font-bold text-slate-100">{statusDescription[setup.marketStatus]}</p>
+      <p className="mt-3 rounded-xl bg-black/20 p-3 text-sm font-bold text-slate-100 ring-1 ring-white/[0.055]">{statusDescription[setup.marketStatus]}</p>
       <p className="mt-3 text-sm font-bold text-slate-200">Next step: {setup.nextStep}</p>
       <p className="mt-2 text-xs font-semibold text-slate-400">{setup.cached ? "ข้อมูล cache ล่าสุดเมื่อ " : "อัปเดตเมื่อ "}{formatTime(setup.updatedAt)} เวลาไทย · auto refresh ทุก 60 วิ</p>
 
       <div className="mt-4 grid grid-cols-2 gap-2">
-        <button className="min-h-12 rounded-2xl border border-cyan-300/30 bg-cyan-300/10 px-4 text-sm font-black text-cyan-100" onClick={() => onBuildPlan?.(setup.symbol)} type="button">
+        <button className="min-h-12 rounded-xl border border-cyan-300/[0.18] bg-cyan-300/[0.08] px-4 text-sm font-black text-cyan-100" onClick={() => onBuildPlan?.(setup.symbol)} type="button">
           Create Plan
         </button>
-        <button className="min-h-12 rounded-2xl border border-slate-300/20 bg-slate-900/70 px-4 text-sm font-black text-slate-100" onClick={() => onRefresh?.(setup.symbol)} type="button">
+        <button className="min-h-12 rounded-xl border border-white/[0.08] bg-black/20 px-4 text-sm font-black text-slate-100" onClick={() => onRefresh?.(setup.symbol)} type="button">
           Refresh
         </button>
-        <button className="min-h-12 rounded-2xl border border-yellow-300/30 bg-yellow-300/10 px-4 text-sm font-black text-yellow-100" onClick={() => onFallback?.(setup.symbol)} type="button">
+        <button className="min-h-12 rounded-xl border border-yellow-300/[0.18] bg-yellow-300/[0.08] px-4 text-sm font-black text-yellow-100" onClick={() => onFallback?.(setup.symbol)} type="button">
           Manual
         </button>
-        <button className="min-h-12 rounded-2xl border border-red-300/30 bg-red-300/10 px-4 text-sm font-black text-red-100" onClick={() => onRemove?.(setup.symbol)} type="button">
+        <button className="min-h-12 rounded-xl border border-red-300/[0.18] bg-red-300/[0.08] px-4 text-sm font-black text-red-100" onClick={() => onRemove?.(setup.symbol)} type="button">
           Remove
         </button>
       </div>
@@ -114,13 +115,13 @@ function TradingChart({ candles, fallbackCloses, status, timeframe }: { candles:
   const ema50 = buildEma(closes, 50);
 
   return (
-    <div className="mt-4 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/85">
-      <div className="flex items-center justify-between border-b border-white/10 px-3 py-2 text-xs font-black text-slate-300">
+    <div className="mt-4 overflow-hidden rounded-xl bg-slate-950/70 ring-1 ring-white/[0.055]">
+      <div className="flex items-center justify-between border-b border-white/[0.055] px-3 py-2 text-xs font-black text-slate-300">
         <span>Chart · {timeframe}</span>
         <span className="text-slate-500">Public Binance candles</span>
       </div>
       <div className="relative p-3">
-        <div className="absolute right-3 top-3 z-10 rounded-lg border border-white/10 bg-slate-950/80 px-2 py-1 text-[10px] font-black text-slate-300">
+        <div className="absolute right-3 top-3 z-10 rounded-lg bg-slate-950/75 px-2 py-1 text-[10px] font-black text-slate-300 ring-1 ring-white/[0.055]">
           H {format(high)} / L {format(low)}
         </div>
         <svg aria-label="Trading candlestick chart" className="h-44 w-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 56">
@@ -186,15 +187,15 @@ function IndicatorLine({ values, color, high, low, range }: { values: Array<numb
 
 function BiasMiniCard({ bias }: { bias: DirectionBiasResult }) {
   return (
-    <div className={`mt-3 rounded-2xl border p-3 ${biasTone[bias.bias]}`}>
+    <div className={`mt-3 rounded-xl border p-3 ${biasTone[bias.bias]}`}>
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.16em] opacity-70">ดูฝั่งที่น่าจับตา</p>
           <p className="mt-1 text-lg font-black text-white">{bias.biasText}</p>
         </div>
         <div className="grid grid-cols-2 gap-1 text-center text-xs font-black">
-          <span className="rounded-xl border border-white/10 bg-black/20 px-2 py-1">L {bias.longScore}</span>
-          <span className="rounded-xl border border-white/10 bg-black/20 px-2 py-1">S {bias.shortScore}</span>
+          <span className="rounded-lg bg-black/20 px-2 py-1 ring-1 ring-white/[0.055]">L {bias.longScore}</span>
+          <span className="rounded-lg bg-black/20 px-2 py-1 ring-1 ring-white/[0.055]">S {bias.shortScore}</span>
         </div>
       </div>
       <p className="mt-2 text-xs font-semibold opacity-85">นี่คือ bias จากข้อมูลในการ์ด ไม่ใช่คำสั่งซื้อขาย</p>
@@ -204,7 +205,7 @@ function BiasMiniCard({ bias }: { bias: DirectionBiasResult }) {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+    <div className="rounded-xl bg-black/20 p-3 ring-1 ring-white/[0.055]">
       <p className="text-[10px] font-bold uppercase tracking-wide opacity-60">{label}</p>
       <p className="mt-1 break-words font-black text-white">{value}</p>
     </div>

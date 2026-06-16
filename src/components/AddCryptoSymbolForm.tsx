@@ -35,14 +35,19 @@ export default function AddCryptoSymbolForm({ existingSymbols, onAdd }: { existi
   }
 
   return (
-    <form className="rounded-3xl border border-slate-700 bg-slate-900/70 p-4" onSubmit={submit}>
+    <form className="rounded-2xl bg-white/[0.035] p-4 ring-1 ring-white/[0.055]" onSubmit={submit}>
       <label className="text-sm font-black text-slate-100">
         เพิ่มเหรียญที่ต้องการเฝ้าดู
-        <input className="mt-2 min-h-12 w-full rounded-2xl border border-slate-700 bg-slate-950 px-3 text-base font-bold text-white outline-none focus:border-cyan-300" placeholder="เช่น BTCUSDT, ETH/USDT, SUIUSDT" value={value} onChange={(event) => setValue(event.target.value)} />
+        <input
+          className="mt-2 min-h-12 w-full rounded-xl border border-white/[0.07] bg-black/30 px-3 text-base font-bold text-white outline-none focus:border-trade-green/45"
+          placeholder="เช่น BTCUSDT, ETH/USDT, SUIUSDT"
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+        />
       </label>
-      <p className="mt-2 text-xs font-semibold text-slate-400">ตอนนี้ระบบรองรับ Crypto คู่ USDT จาก Binance ก่อน</p>
-      {error ? <p className="mt-3 rounded-2xl border border-yellow-300/35 bg-yellow-300/10 p-3 text-sm font-bold text-yellow-100">{error}</p> : null}
-      <button className="mt-3 min-h-12 w-full rounded-2xl bg-cyan-300 px-4 font-black text-slate-950 disabled:opacity-60" disabled={loading} type="submit">
+      <p className="mt-2 text-xs font-semibold text-slate-400">ตอนนี้รองรับ Crypto คู่ USDT จาก Binance ก่อน</p>
+      {error ? <p className="mt-3 rounded-xl border border-yellow-300/20 bg-yellow-300/[0.08] p-3 text-sm font-bold text-yellow-100">{error}</p> : null}
+      <button className="trade-button mt-3 min-h-12 w-full rounded-xl px-4 font-black disabled:opacity-60" disabled={loading} type="submit">
         {loading ? "กำลังตรวจสอบ Binance..." : "เพิ่มเข้า Watchlist"}
       </button>
     </form>
